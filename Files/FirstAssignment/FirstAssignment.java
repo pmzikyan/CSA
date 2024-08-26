@@ -34,7 +34,7 @@ public class FirstAssignment extends GraphicsProgram {
 		GLabel s9 = new GLabel("playing it with everyone during the night.", 10, 180);
 		GLabel s10 = new GLabel("I met up with my friends a few times, at least while they weren't traveling.", 10, 200);
 		GLabel s11 = new GLabel("I had plans before the summer to accomplish things that I ended up not doing.", 10, 220);
-		GLabel s12 = new GLabel("Even if it wasn't as productive as it could've been, it was refreshing get a break.", 10, 240);
+		GLabel s12 = new GLabel("Even if it wasn't as productive as it could've been, it was refreshing to get a break.", 10, 240);
     	
     	s1.setFont(f);
     	s2.setFont(f);
