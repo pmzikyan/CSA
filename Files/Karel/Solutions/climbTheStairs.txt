@@ -1,0 +1,23 @@
+/*
+F1 = moveForward();
+F2 = turnLeft();
+F3 = turnAround();
+F4 = turnRight();
+F5 = pickBeeper();
+F6 = dropBeeper();
+*/
+
+void climbTheStairs()
+{
+    moveForward();
+    repeat(6) {
+        climbStep();
+    }
+}
+void climbStep()
+{
+    turnLeft();
+    moveForward();
+    turnRight();
+    moveForward();
+}

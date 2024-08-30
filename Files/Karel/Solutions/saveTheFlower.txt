@@ -1,0 +1,42 @@
+/*
+F1 = moveForward();
+F2 = turnLeft();
+F3 = turnAround();
+F4 = turnRight();
+F5 = pickBeeper();
+F6 = dropBeeper();
+*/
+
+void saveTheFlower()
+{
+    moveForward();
+    pickBeeper();
+    while(!frontIsClear()) {
+        climbUpStep();
+    }
+    dropBeeper();
+    moveForward();
+    while(frontIsClear()) {
+        climbDownStep();
+    }
+    turnRight();
+    moveForward();
+    moveForward();
+    turnLeft();
+}
+void climbUpStep()
+{
+    turnLeft();
+    moveForward();
+    moveForward();
+    turnRight();
+    moveForward();
+}
+void climbDownStep()
+{
+    turnRight();
+    moveForward();
+    moveForward();
+    turnLeft();
+    moveForward();
+}
