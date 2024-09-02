@@ -1,0 +1,63 @@
+/*
+F1 = moveForward();
+F2 = turnLeft();
+F3 = turnAround();
+F4 = turnRight();
+F5 = pickBeeper();
+F6 = dropBeeper();
+*/
+
+void secureTheCave()
+{
+    repeat (9)
+    {
+        start();
+    }
+    turnLeft();
+    noRock();
+    turnRight();
+    
+}
+void start()
+{
+    turnLeft();
+    noRock();
+    turnRight();
+    moveForward();
+}
+void noRock()
+{
+    if (beeperAhead())
+    {
+        moveForward();
+        foundRock();
+    }
+    else
+    {
+        moveForward();
+        noRock();
+    }
+}
+void foundRock()
+{
+    if (frontIsClear())
+    {
+        moveForward();
+        foundRock();
+    }
+    else
+    {
+        turnAround();
+        while (frontIsClear())
+        {
+            if (onBeeper())
+            {
+                pickBeeper();
+            }
+            moveForward();
+        }
+        turnAround();
+    }
+    dropBeeper();
+    moveForward();
+}
