@@ -21,4 +21,9 @@ public class USMap {
 		StdDraw.setXscale(128.0, 65.0);
 		StdDraw.setYscale(22.0, 52.0);
 	}
+	
+	/** Set up the city points */
+	public void setupCities() {
+		
+	}
 }
