@@ -14,8 +14,8 @@ public class USMap {
 	static FileUtils FU;
 	double[] xCoords, yCoords;
 	int[] pop;
-	String[] cityNames;
-	int citiesLength, bigCitiesLength; 
+	String[] cityNames, bigCityNames;
+	int citiesLength, bigCitiesLength;
 	
 	public static void main(String[] args) {
 		USMap US = new USMap();
@@ -23,7 +23,6 @@ public class USMap {
 		US.setupCanvas();
 		
 		US.setup();
-		US.setupCities();
 	}
 	
 	/** Set up the canvas size and scale */
@@ -34,63 +33,93 @@ public class USMap {
 		StdDraw.setYscale(22.0, 52.0);
 	}
 	
-	/** Set up the arrays */
+	/** Set up the arrays and draw the dots */
 	public void setup()
 	{
-		cities =  = FU.openToRead("cities.txt");
+		cities = FU.openToRead("cities.txt");
 		bigCities = FU.openToRead("bigCities.txt");
 		
 		citiesLength = docLength(cities);
 		bigCitiesLength = docLength(bigCities);
 		
-		cities =  = FU.openToRead("cities.txt");
+		cities = FU.openToRead("cities.txt");
 		bigCities = FU.openToRead("bigCities.txt");
 		
-		xCoords = new double[cities];
-		yCoords = new double[cities];
-		cityNames = new String[cities];
-		
-		
-		
+		xCoords = new double[citiesLength];
+		yCoords = new double[citiesLength];
+		cityNames = new String[citiesLength];
+		bigCityNames = new String[bigCitiesLength];
+		pop = new int[bigCitiesLength];
+
 		int index = 0;
-		yCoords[index] = cities.nextDouble();
-		xCoords[index] = cities.nextDouble();
-		
+		String tempStr = "";
+		int tempInt = 0;
+
 		do
 		{
-			cities.nextLine();
-			drawCity();
-			index++
+			bigCities.nextInt();
+
+			tempStr = bigCities.nextLine();
+			tempInt = tempStr.indexOf(" , ") + 6;
+
+			bigCityNames[index] = tempStr.substring(0, tempInt - 1);
+			pop[index] = Integer.parseInt( tempStr.substring(tempInt, tempStr.length()) );
+			index++;
 		}
-		while (cities.hasNextLine());
-	}
-	
-	public int docLength(Scanner doc)
-	{
-		int num;
-		for (num = 0; doc.hasNextLine; num++);
-		return num;
-	}
-	
-	/** Set up the city points */
-	public void setupCities() {
-		
+		while (bigCities.hasNextLine());
+
+		index = 0;
 		StdDraw.setPenRadius(0.006);
         StdDraw.setPenColor(StdDraw.GRAY);
-		
-		drawCity();
+
+		boolean containsCity = false;
 		do
 		{
-			cities.nextLine();
-			drawCity();
+			yCoords[index] = cities.nextDouble();
+			xCoords[index] = cities.nextDouble();
+			cityNames[index] = cities.nextLine();
+			//System.out.println(xCoords[index] + "\t" + yCoords[index] + "\t" + cityNames[index]);
+
+			containsCity = false;
+			tempInt = 0;
+			for (int i = 0; i < bigCitiesLength; i++)
+			{
+				if (cityNames[index].equals(bigCityNames[i]))
+				{
+					containsCity = true;
+					tempInt = i;
+				}
+			}
+			if (!containsCity)
+			{
+				StdDraw.setPenRadius(0.006);
+				StdDraw.setPenColor(StdDraw.GRAY);
+			}
+			else
+			{
+				StdDraw.setPenRadius(0.6 * (Math.sqrt(pop[tempInt])/18500));
+				if (tempInt < 10)
+					StdDraw.setPenColor(StdDraw.RED);
+				else
+					StdDraw.setPenColor(StdDraw.BLUE);
+			}
+			StdDraw.point(xCoords[index], yCoords[index]);
+			index++;
 		}
 		while (cities.hasNextLine());
 	}
-	
-	/** Draws the city points */
-	public void drawCity(cityNum)
+
+	/** Finds how many lines long a .txt file is */
+	public int docLength(Scanner doc)
 	{
-		
-		StdDraw.point(xCoords[cityNum], yCoords[cityNum]);
+		int num = 0;
+		do
+		{
+			num++;
+			doc.nextLine();
+		}
+		while (doc.hasNextLine());
+
+		return num;
 	}
 }
