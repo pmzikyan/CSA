@@ -20,6 +20,10 @@ public class PromptTester {
 		
 		d = Prompt.getDouble("Give me a double", 20, 40);
 		System.out.println("Here it is -> " + d);
+		
+		char c = Prompt.getChar("Give me an character");
+		System.out.println("Here it is -> " + c);
+		
 	}
 
 }

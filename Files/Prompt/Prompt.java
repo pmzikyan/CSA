@@ -51,7 +51,16 @@ public class Prompt
 	{
 		char c = (char)0;
 
-		c = (char)getInt(ask);
+		boolean found = false;
+		 
+		while (!found) {
+			String str = getString(ask);
+			if (str.length() <= 1)
+			{
+				c = str.charAt(0);
+				found = true;
+			}
+		}
 		
 		return c;
 	}
