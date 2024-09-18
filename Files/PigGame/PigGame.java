@@ -12,19 +12,40 @@ public class PigGame {
 	public void playGame()
 	{
 		Dice dice = new Dice();
-		int pScore, cScore;
+		int pScore, cScore, turnScore;
+		pScore = cScore = turnScore = 0;
 		boolean cTurn = false;
-		pScore = cScore = 0;
+		char c = ' '; // Temporary char
 		
 		while (pScore < 100 || cScore < 100)
 		{
-			if (false)
-			{
+			if (!cTurn)
+			{ // Runs player's turn
+				System.out.println("**** USER Turn ***\n");
+				System.out.println("Your turn score:\t" + turnScore);
+				System.out.println("Your total score:\t" + pScore);
+				
+				do
+					c = ask.getChar("\n(r)oll or (h)old");
+				while (!(c == 'r' || c == 'h'));
+				
+				if (c == 'r')
+				{
+					dice.roll();
+					turnScore += dice.getValue();
+				}
+				else
+				{
+					pScore += turnScore;
+					turnScore = 0;
+				}
 				
 				cTurn = false;
 			}
 			else
-			{
+			{ // Runs computer's turn
+				System.out.println("**** COMPUTER's Turn ***\n");
+				
 				
 				cTurn = true;
 			}
@@ -67,6 +88,15 @@ public class PigGame {
 		ask = new Prompt();
 		pg.printIntroduction();
 		
-		ask.getChar("Play game or Statistics (p or s)");
+		// c is a temporary char
+		char c = ' ';
+		while (!(c == 'p' || c == 's'))
+			c = ask.getChar("Play game or Statistics (p or s)");
+		
+		if (c == 'p')
+			pg.playGame();
+		else
+			pg.statistics();
+		
 	}
 }
