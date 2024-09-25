@@ -83,6 +83,9 @@ public class MVCipher {
 		/* Read input file, encrypt or decrypt, and print to output file */
 		
 		if (encryptOrDecrypt == 1)
+			encryptFile(fileUsing, newFile, keyword);
+		else
+			decryptFile(fileUsing, newFile, keyword);
 			
 		
 		/* Don't forget to close your output file */
@@ -90,10 +93,79 @@ public class MVCipher {
 		newFile.close();
 	}
 	
-	public void encryptFile()
+	public void encryptFile(Scanner inputFile, 
+								PrintWriter outputFile, String key)
 	{
-		
+		int charCount = 0;
+		while (inputFile.hasNext())
+		{
+			String nextStr = inputFile.nextLine();
+			for (int i = 0; i < nextStr.length(); i++)
+			{
+				char c = nextStr.charAt(i);
+				if (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))
+				{
+					outputFile.print(returnShiftedChar(c, 
+							key.charAt(charCount % key.length()), true));
+				}
+				else
+				{
+					outputFile.print(c);
+				}
+				charCount++;
+			}
+			outputFile.println();
+		}
 	}
 	
-	public 
+	public void decryptFile(Scanner inputFile, 
+								PrintWriter outputFile, String key)
+	{
+		int charCount = 0;
+		while (inputFile.hasNext())
+		{
+			String nextStr = inputFile.nextLine();
+			for (int i = 0; i < nextStr.length(); i++)
+			{
+				char c = nextStr.charAt(i);
+				if (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))
+				{
+					outputFile.print(returnShiftedChar(c, 
+							key.charAt(charCount % key.length()), false));
+				}
+				else
+				{
+					outputFile.print(c);
+				}
+				charCount++;
+			}
+			outputFile.println();
+		}
+	}
+	
+	public char returnShiftedChar(int letter, char shift, boolean encrypts)
+	{
+		boolean isLowercase = 'a' <= letter && letter <= 'z';
+		
+		if (encrypts)
+		{
+			letter += shift - 'A' + 1;
+			
+			if (isLowercase && letter > 'z')
+				letter -= 26;
+			else if (!isLowercase && letter > 'Z')
+				letter -= 26;
+		}
+		else
+		{
+			letter -= (shift - 'A' + 1);
+			
+			if (isLowercase && letter < 'a')
+				letter += 26;
+			else if (!isLowercase && letter < 'A')
+				letter += 26;
+		}
+		
+		return (char)letter;
+	}
 }
