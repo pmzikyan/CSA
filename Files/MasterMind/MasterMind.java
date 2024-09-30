@@ -40,7 +40,7 @@ public class MasterMind {
 			guesses[i] = new PegArray(PEGS_IN_CODE);
 		}
 		ask = new Prompt();
-		guessOn = 1;
+		guessOn = 0;
 	}
 	
 	/**
@@ -49,11 +49,19 @@ public class MasterMind {
 	public void run()
 	{
 		ask.getString("Hit the Enter key to start the game");
-		printBoard();
+		do
+		{
+			printBoard();
+			String guess = returnGuess();
+			
+		}
+		while (guessOn < 10);
+		
 	}
 	
 	private String returnGuess()
 	{
+		guessOn++;
 		System.out.println("Guess " + guessOn);
 		boolean valid = true;
 		String out;
@@ -61,12 +69,18 @@ public class MasterMind {
 		do
 		{
 			out = ask.getString("Enter the code using (A,B,C,D,E,F). " + 
-			"For example, ABCD or abcd from left-to-right");
-			// --- CONTINUE FROM HERE ---
+			"For example, ABCD or abcd from left-to-right").toUpperCase();
+			if (out.length() != 4)
+				valid = false;
+			for (int i = 0; i > out.length() && valid; i++)
+			{
+				if (!('A' <= out.charAt(i) && out.charAt(i) <= 'F'))
+					valid = false;
+			}
 		}
 		while (valid);
 		
-		return
+		return out;
 	}
 	
 	/**
