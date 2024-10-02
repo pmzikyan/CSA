@@ -39,6 +39,13 @@ public class MasterMind {
 		{
 			guesses[i] = new PegArray(PEGS_IN_CODE);
 		}
+		master = new PegArray(PEGS_IN_CODE);
+		for (int i = 0; i < PEGS_IN_CODE; i++)
+		{
+			master.getPeg(i).setLetter((char)
+					((int)(Math.random() * PEG_LETTERS) + 'A'));
+		}
+		
 		ask = new Prompt();
 		guessOn = 0;
 	}
@@ -53,13 +60,16 @@ public class MasterMind {
 		{
 			printBoard();
 			String guess = returnGuess();
+			setPegArray(guess);
 			
+			guesses[guessOn - 1].getPartialMatches(master);
+			guesses[guessOn - 1].getExactMatches(master);
 		}
 		while (guessOn < 10);
 		
 	}
 	
-	private String returnGuess()
+	public String returnGuess()
 	{
 		guessOn++;
 		System.out.println("Guess " + guessOn);
@@ -70,17 +80,27 @@ public class MasterMind {
 		{
 			out = ask.getString("Enter the code using (A,B,C,D,E,F). " + 
 			"For example, ABCD or abcd from left-to-right").toUpperCase();
-			if (out.length() != 4)
+			if (out.length() != PEGS_IN_CODE)
 				valid = false;
 			for (int i = 0; i > out.length() && valid; i++)
 			{
 				if (!('A' <= out.charAt(i) && out.charAt(i) <= 'F'))
 					valid = false;
 			}
+			if (!valid)
+				System.out.println("ERROR: Bad input, try again.");
 		}
-		while (valid);
+		while (!valid);
 		
 		return out;
+	}
+	
+	public void setPegArray(String guess)
+	{
+		for (int i = 0; i < PEGS_IN_CODE; i++)
+		{
+			guesses[guessOn - 1].getPeg(i).setLetter(guess.charAt(i));
+		}
 	}
 	
 	/**

@@ -42,7 +42,17 @@ public class PegArray {
 	 *  @param master	The master (code) peg array
 	 *	@return			The number of exact matches
 	 */
-	public int getExactMatches(PegArray master) { return 0; }
+	public int getExactMatches(PegArray master) 
+	{
+		exactMatches = 0;
+		for (int i = 0; i < pegs.length; i++)
+		{
+			if (master.getPeg(i).getLetter() == 
+					pegs[i].getLetter())
+				exactMatches++;
+		}
+		return exactMatches;
+	}
 	
 	/**
 	 *  Find partial matches between master (key) peg array and this peg array
@@ -50,7 +60,20 @@ public class PegArray {
 	 *  @param master	The master (code) peg array
 	 *	@return			The number of partial matches
 	 */
-	public int getPartialMatches(PegArray master) { return 0; }
+	public int getPartialMatches(PegArray master) 
+	{
+		partialMatches = 0;
+		for (int i = 0; i < pegs.length; i++)
+		{
+			for (int a = 0; a < pegs.length; a++)
+			{
+				if (master.getPeg(i).getLetter() == 
+						pegs[a].getLetter() && i != a)
+					partialMatches++;
+			}
+		}
+		return partialMatches;
+	}
 	
 	// Accessor methods
 	// Precondition: getExactMatches() and getPartialMatches() must be called first
