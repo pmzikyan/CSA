@@ -67,8 +67,8 @@ public class MasterMind {
 			String guess = returnGuess();
 			setPegArray(guess);
 			
-			guesses[guessOn - 1].getPartialMatches(master);
 			exacts = guesses[guessOn - 1].getExactMatches(master);
+			guesses[guessOn - 1].getPartialMatches(master);
 		}
 		while (guessOn < MAX_GUESSES && exacts < PEGS_IN_CODE);
 		
