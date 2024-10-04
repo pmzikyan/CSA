@@ -1,6 +1,9 @@
 /**
  *	Plays the game of MasterMind.
- *	<Describe the game here>
+ *	A "master" (or a string of 4 letters - can be A, B, C, D, E, or F)
+ * 	is randomized and the user has 10 turns to guess it. A table is printed
+ * 	that shows the partial and exact matches for each guess.
+ *  
  *	@author	Petros Mzikyan
  *	@since	9/27/2024
  */
@@ -23,8 +26,6 @@ public class MasterMind {
 	public static void main(String[] args)
 	{
 		MasterMind masterMind = new MasterMind();
-		masterMind.printIntroduction();
-		masterMind.initiateFields();
 		masterMind.run();
 	}
 	
@@ -55,6 +56,10 @@ public class MasterMind {
 	 */
 	public void run()
 	{
+		initiateFields();
+		printIntroduction();
+		
+		int exacts = 0;
 		ask.getString("Hit the Enter key to start the game");
 		do
 		{
@@ -63,21 +68,40 @@ public class MasterMind {
 			setPegArray(guess);
 			
 			guesses[guessOn - 1].getPartialMatches(master);
-			guesses[guessOn - 1].getExactMatches(master);
+			exacts = guesses[guessOn - 1].getExactMatches(master);
 		}
-		while (guessOn < 10);
+		while (guessOn < MAX_GUESSES && exacts < PEGS_IN_CODE);
+		
+		reveal = true;
+		printBoard();
+		if (guessOn < MAX_GUESSES)
+		{
+			System.out.println("\nNice work! You found the master code in "
+								+ guessOn + " guesses.\n");
+		}
+		else
+		{
+			System.out.println("Oops. You were unable to " + 
+								"find the solution in 10 guesses.");
+		}
 		
 	}
 	
+	/**
+	 * 	Asks the user for a guess and returns the guess as long as it's valid
+	 * 
+	 * 	@return 	a valid guess
+	 */
 	public String returnGuess()
 	{
 		guessOn++;
-		System.out.println("Guess " + guessOn);
-		boolean valid = true;
+		System.out.println("\nGuess " + guessOn + "\n");
+		boolean valid;
 		String out;
 		
 		do
 		{
+			valid = true;
 			out = ask.getString("Enter the code using (A,B,C,D,E,F). " + 
 			"For example, ABCD or abcd from left-to-right").toUpperCase();
 			if (out.length() != PEGS_IN_CODE)
@@ -95,6 +119,11 @@ public class MasterMind {
 		return out;
 	}
 	
+	/**
+	 * 	Saves the current guess to the PegArray Peg objects
+	 * 
+	 * 	@param	guess	the current guess
+	 */
 	public void setPegArray(String guess)
 	{
 		for (int i = 0; i < PEGS_IN_CODE; i++)
