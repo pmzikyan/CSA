@@ -41,6 +41,8 @@ public class Wordle
 	/**	File that contains 5-letter words allowed for user guesses. (bigger file) */
 	private final String WORDS5_ALLOWED = "words5allowed.txt";
 	
+	private final int LOWER_TO_UPPERCASE = 'a' - 'A';
+	
 	/**	A variety of boolean variables to turn things on and off.  These include:
 	 *	show				-	when true, will print the current word to the terminal
 	 *	readyForKeyInput    -	when true, will accept keyboard input, when false,
@@ -54,7 +56,8 @@ public class Wordle
 	/**  An array to determine how to color the keyboard at the bottom of the gameboard.
 	 *   0 for not checked yet, 1 for no match, 2 for partial, 3 for exact
 	 */
-	private int [] keyBoardColors;						
+	private int [] keyBoardColors;			
+				
 	
 	/** 
 	 *	Creates a Wordle object.  A constructor.  Initializes all of the variables by 
@@ -90,7 +93,7 @@ public class Wordle
 		readyForKeyInput = activeGame = true;
 		readyForMouseInput = false;
 		keyBoardColors = new int[29];
-		word = openFileAndChooseWord(WORDS5, testWord);		
+		word = openFileAndChooseWord(WORDS5, testWord);	
 	}
 
 	/**
@@ -108,8 +111,10 @@ public class Wordle
 		// args[0] is "show" which means to show the word chosen
 		// args[1] is a word which is used as the chosen word
 
-
-
+		if (args.length >= 2) {
+			testWord = args[1];
+			showIt = args[0];
+		}
 
 		Wordle run = new Wordle(showIt, testWord);
 		run.setUpCanvas();
@@ -171,7 +176,9 @@ public class Wordle
 		
 		do
 		{
-			goalsFile.next();
+			result = goalsFile.next();
+			if (result.equalsIgnoreCase(testWord))
+				return result;
 			goalWordsAmount++;
 		}
 		while (goalsFile.hasNext());
@@ -179,7 +186,8 @@ public class Wordle
 		goalsFile.close();
 		goalsFile = goalWords.openToRead(WORDS5);
 		
-		for (int i = 1; i < goalWordsAmount; i++)
+		int max = (int)(Math.random() * goalWordsAmount);
+		for (int i = 0; i < max; i++)
 			goalsFile.next();
 		
 		result = goalsFile.next();
@@ -245,7 +253,7 @@ public class Wordle
 		// draw guessed letter backgrounds
 
 
-
+		
 
 		
 		for(int row = 0; row < 6; row++)
@@ -254,7 +262,15 @@ public class Wordle
 			{
 				if(wordGuess[row].length() != 0)											//  THIS METHOD IS INCOMPLETE.
 				{
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+					if (wordGuess[row].charAt(col) == 
+								word.charAt(col) - LOWER_TO_UPPERCASE)
+					{
+						StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameGreen.png");
+					}
+					else
+					{
+						StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+					}
 				}
 				else
 				{
@@ -345,6 +361,7 @@ public class Wordle
 			if(wordGuess[i].length() == 5)
 			{
 				lastWord = wordGuess[i];
+				
 			}
 		}
 		
