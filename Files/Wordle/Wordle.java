@@ -265,11 +265,29 @@ public class Wordle
 					if (wordGuess[row].charAt(col) == 
 								word.charAt(col) - LOWER_TO_UPPERCASE)
 					{
-						StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameGreen.png");
+						StdDraw.picture(209 + col * 68, 650 - row * 68, 
+												"letterFrameGreen.png");
 					}
 					else
 					{
-						StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+						boolean isPartial = false;
+						
+						for (int i = col - 1; i >= 0 &&
+							wordGuess[row].charAt(col) != 
+							wordGuess[row].charAt(i) && !isPartial; i--)
+						{
+							if (wordGuess[row].charAt(col) ==
+									wordGuess[row].charAt(i))
+								isPartial = true;
+							System.out.println(i + ", " + col);
+						}
+						
+						if (isPartial)
+							StdDraw.picture(209 + col * 68, 650 - row * 68, 
+												"letterFrameYellow.png");
+						else
+							StdDraw.picture(209 + col * 68, 650 - row * 68, 
+												"letterFrameDarkGray.png");
 					}
 				}
 				else
