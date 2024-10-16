@@ -192,7 +192,7 @@ public class Wordle
 		
 		result = goalsFile.next();
 		
-		return result;
+		return result.toUpperCase();
 	}
 
 	/** 
@@ -272,14 +272,14 @@ public class Wordle
 					{
 						boolean isPartial = false;
 						
-						for (int i = col - 1; i >= 0 &&
-							wordGuess[row].charAt(col) != 
-							wordGuess[row].charAt(i) && !isPartial; i--)
+						for (int i = 4; i >= 0 /*&& !isPartial /*&&
+							wordGuess[row].charAt(col) == 
+							wordGuess[row].charAt(i)*/; i--)
 						{
 							if (wordGuess[row].charAt(col) ==
-									wordGuess[row].charAt(i))
+									word.charAt(i))
 								isPartial = true;
-							System.out.println(i + ", " + col);
+							//System.out.println(i + ", " + col);
 						}
 						
 						if (isPartial)
