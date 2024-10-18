@@ -272,12 +272,12 @@ public class Wordle
 					{
 						boolean isPartial = false;
 						
-						for (int i = 4; i >= 0 /*&& !isPartial /*&&
+						for (int i = 4; i >= 0 && !isPartial &&
 							wordGuess[row].charAt(col) == 
-							wordGuess[row].charAt(i)*/; i--)
+							wordGuess[row].charAt(i); i--)
 						{
 							if (wordGuess[row].charAt(col) ==
-									word.charAt(i))
+									word.charAt(i) - LOWER_TO_UPPERCASE)
 								isPartial = true;
 							//System.out.println(i + ", " + col);
 						}
