@@ -74,7 +74,7 @@ public class MasterMind {
 		
 		reveal = true;
 		printBoard();
-		if (guessOn < MAX_GUESSES)
+		if (exacts == 4)
 		{
 			System.out.println("\nNice work! You found the master code in "
 								+ guessOn + " guesses.\n");
@@ -106,7 +106,7 @@ public class MasterMind {
 			"For example, ABCD or abcd from left-to-right").toUpperCase();
 			if (out.length() != PEGS_IN_CODE)
 				valid = false;
-			for (int i = 0; i > out.length() && valid; i++)
+			for (int i = 0; i < out.length() && valid; i++)
 			{
 				if (!('A' <= out.charAt(i) && out.charAt(i) <= 'F'))
 					valid = false;

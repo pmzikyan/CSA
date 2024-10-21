@@ -41,8 +41,6 @@ public class Wordle
 	/**	File that contains 5-letter words allowed for user guesses. (bigger file) */
 	private final String WORDS5_ALLOWED = "words5allowed.txt";
 	
-	private final int LOWER_TO_UPPERCASE = 'a' - 'A';
-	
 	/**	A variety of boolean variables to turn things on and off.  These include:
 	 *	show				-	when true, will print the current word to the terminal
 	 *	readyForKeyInput    -	when true, will accept keyboard input, when false,
@@ -93,7 +91,9 @@ public class Wordle
 		readyForKeyInput = activeGame = true;
 		readyForMouseInput = false;
 		keyBoardColors = new int[29];
-		word = openFileAndChooseWord(WORDS5, testWord);	
+		word = openFileAndChooseWord(WORDS5, testWord).toUpperCase();
+		if (show == true)
+			System.out.println(word);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class Wordle
 		
 		result = goalsFile.next();
 		
-		return result.toUpperCase();
+		return result;
 	}
 
 	/** 
@@ -263,7 +263,7 @@ public class Wordle
 				if(wordGuess[row].length() != 0)											//  THIS METHOD IS INCOMPLETE.
 				{
 					if (wordGuess[row].charAt(col) == 
-								word.charAt(col) - LOWER_TO_UPPERCASE)
+								word.charAt(col))
 					{
 						StdDraw.picture(209 + col * 68, 650 - row * 68, 
 												"letterFrameGreen.png");
@@ -271,16 +271,22 @@ public class Wordle
 					else
 					{
 						boolean isPartial = false;
-						
-						for (int i = 4; i >= 0 && !isPartial &&
-							wordGuess[row].charAt(col) == 
-							wordGuess[row].charAt(i); i--)
-						{
-							if (wordGuess[row].charAt(col) ==
-									word.charAt(i) - LOWER_TO_UPPERCASE)
-								isPartial = true;
-							//System.out.println(i + ", " + col);
-						}
+
+						int lettersInWord = 0, lettersInGuess = 0;
+
+						for (int i = 0; i < 5; i++)
+
+
+//						for (int i = 4; i >= 0 && !isPartial &&
+//							(col == i || wordGuess[row].charAt(col) !=
+//							wordGuess[row].charAt(i)); i--)
+//						{
+//							System.out.println(wordGuess[row] + word);
+//							if (wordGuess[row].charAt(col) ==
+//									word.charAt(i))
+//								isPartial = true;
+//							//System.out.println(i + ", " + col);
+//						}
 						
 						if (isPartial)
 							StdDraw.picture(209 + col * 68, 650 - row * 68, 
