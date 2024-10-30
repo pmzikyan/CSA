@@ -41,9 +41,33 @@ public class DiceGroup {
 	 *
 	 *	you complete
 	 */
-	public void rollDice(String rawHold) { }
+	public void rollDice(String rawHold) 
+	{ 
+		boolean[] rerollDice = {true, true, true, true, true};
+		for (int i = 0; i < NUM_DICE; i++)
+			for (int j = 0; j < rawHold.length(); j++)
+				if ((rawHold.charAt(j)+"").equals(i + 1 + ""))
+					rerollDice[i] = false;
+		
+		for (int i = 0; i < rerollDice.length; i++)
+			if (rerollDice[i])
+				die[i].roll();
+				
+	}
 	
 	/**	getters - you complete */
+	
+	public int getDieValue(int num) { return die[num].getValue(); }
+	
+	public int getNumberCount(int number)
+	{
+		int out = 0;
+		for (int i = 0; i < NUM_DICE; i++)
+			if (getDieValue(i) == number)
+				out++;
+		
+		return out;
+	}
 	
 	/**	@return the total value of the DiceGroup - you complete */
 	public int getTotal() {

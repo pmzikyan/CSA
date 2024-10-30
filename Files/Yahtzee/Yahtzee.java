@@ -54,9 +54,29 @@ public class Yahtzee {
 				diceGroup.rollDice();
 				diceGroup.printDice();
 				
-				int diceToChange = ask.getString("Which di(c)e would you like to keep?"
+				String diceToChange = "";
+				for (int i = 0; i < 3 && !diceToChange.equals("-1"); i++)
+				{
+					diceToChange = ask.getString("Which di(c)e would you like to keep? "
 + "Enter the values you'd like to 'hold' without spaces. For examples, " 
 + "if you'd like to 'hold' die 1, 2, and 5, enter 125 (enter -1 if you'd like to end the turn)");
+					
+					if (!diceToChange.equals("-1")) {
+						diceGroup.rollDice(diceToChange);
+						diceGroup.printDice();
+					}
+				}
+				
+				printScore();
+				
+				boolean validChoice;
+				do {
+					int choice = ask.getInt(currentPlayer.getName() + 
+", now you need to make a choice. Pick a valid integer from the list above", 1, 13);
+					validChoice = currentPlayer.getScoreCard().changeScore(choice, diceGroup);
+				}
+				while (!validChoice);
+				
 				
 				player1Turn = !player1Turn;
 			}

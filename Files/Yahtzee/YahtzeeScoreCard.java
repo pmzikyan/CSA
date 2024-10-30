@@ -5,6 +5,14 @@
  * 	@since 10/23/2024
 */
 public class YahtzeeScoreCard {
+	private int[] scorecard;
+	
+	public YahtzeeScoreCard() {
+		scorecard = new int[13];
+		for (int i = 0; i < scorecard.length; i++)
+			scorecard[i] = -1;
+	}
+	
 	/**
 	 *  Print the scorecard header
 	 */
@@ -32,9 +40,7 @@ public class YahtzeeScoreCard {
 						"---------------------------+\n");
 	}
 	
-	public int getScore(int column) {
-		return -1;
-	}
+	public int getScore(int column) { return scorecard[column - 1]; }
 
 	/**
 	 *  Change the scorecard based on the category choice 1-13.
@@ -43,7 +49,38 @@ public class YahtzeeScoreCard {
 	 *  @param dg  The DiceGroup to score
 	 *  @return  true if change succeeded. Returns false if choice already taken.
 	 */
-	public boolean changeScore(int choice, DiceGroup dg) { return false; }
+	public boolean changeScore(int choice, DiceGroup dg)
+	{ 
+		if (getScore(choice) != -1)
+			return false;
+		switch (choice) {
+			case 1: case 2: case 3: case 4: case 5: case 6:
+				numberScore(choice, dg);
+				break;
+			case 7:
+				threeOfAKind(dg);
+				break;
+			case 8:
+				fourOfAKind(dg);
+				break;
+			case 9:
+				fullHouse(dg);
+				break;
+			case 10:
+				smallStraight(dg);
+				break;
+			case 11:
+				largeStraight(dg);
+				break;
+			case 12:
+				chance(dg);
+				break;
+			case 13:
+				yahtzeeScore(dg);
+				
+		}
+		return true;
+	}
 	
 	/**
 	 *  Change the scorecard for a number score 1 to 6
@@ -51,7 +88,10 @@ public class YahtzeeScoreCard {
 	 *  @param choice The choice of the player 1 to 6
 	 *  @param dg  The DiceGroup to score
 	 */
-	public void numberScore(int choice, DiceGroup dg) {}
+	public void numberScore(int choice, DiceGroup dg) 
+	{
+		scorecard[choice - 1] = dg.getNumberCount(choice) * choice;
+	}
 	
 	/**
 	 *	Updates the scorecard for Three Of A Kind choice.
