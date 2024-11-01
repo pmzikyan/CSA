@@ -15,14 +15,16 @@ public class Yahtzee {
 	
 	private boolean player1Turn;
 	private int round;
-	
+
+	/**
+	 * Sets up the field variables
+	 */
 	public Yahtzee() {
 		player1 = new YahtzeePlayer();
 		player2 = new YahtzeePlayer();
 		ask = new Prompt();
 		diceGroup = new DiceGroup();
 		
-		player1Turn = true;
 		round = 0;
 	}
 	
@@ -32,62 +34,87 @@ public class Yahtzee {
 		yahtzee.preGame();
 		yahtzee.run();
 	}
-	
+
+	/**
+	 * Runs the game of Yahtzee
+	 */
 	public void run() {
 		while (round < 13)
 		{
 			round++;
+			player1Turn = false;
 			do {
-				printScore();
+				printScore(false);
 				YahtzeePlayer currentPlayer;
 				if (player1Turn) {
 					currentPlayer = player1;
-					System.out.println("\nRound " + round + " of " + 
+					System.out.println("\nRound " + round + " of " +
 									NUM_ROUNDS + " rounds.\n");
 				}
 				else
 					currentPlayer = player2;
-				
-				ask.getString("\n" + currentPlayer.getName() + 
+
+				ask.getString("\n" + currentPlayer.getName() +
 		", it's your turn to play. Please hit enter to roll the dice");
-		
+
 				diceGroup.rollDice();
 				diceGroup.printDice();
-				
+
 				String diceToChange = "";
 				for (int i = 0; i < 3 && !diceToChange.equals("-1"); i++)
 				{
 					diceToChange = ask.getString("Which di(c)e would you like to keep? "
-+ "Enter the values you'd like to 'hold' without spaces. For examples, " 
++ "Enter the values you'd like to 'hold' without spaces. For examples, "
 + "if you'd like to 'hold' die 1, 2, and 5, enter 125 (enter -1 if you'd like to end the turn)");
-					
+
 					if (!diceToChange.equals("-1")) {
 						diceGroup.rollDice(diceToChange);
 						diceGroup.printDice();
 					}
 				}
-				
-				printScore();
-				
+
+				printScore(true);
+
 				boolean validChoice;
 				do {
-					int choice = ask.getInt(currentPlayer.getName() + 
+					int choice = ask.getInt(currentPlayer.getName() +
 ", now you need to make a choice. Pick a valid integer from the list above", 1, 13);
 					validChoice = currentPlayer.getScoreCard().changeScore(choice, diceGroup);
 				}
 				while (!validChoice);
-				
-				
+
+
 				player1Turn = !player1Turn;
 			}
 			while (player1Turn);
 		}
+
+		printScore(false);
+
+		int player1Total = player1.getScoreCard().getTotalScore();
+		int player2Total = player2.getScoreCard().getTotalScore();
+		System.out.printf("%-17sscore total = %d\n", player1.getName(), player1Total);
+		System.out.printf("%-17sscore total = %d\n\n", player2.getName(), player2Total);
+
+		if (player1Total > player2Total)
+			System.out.println("Congratulations " + player1.getName() + ". YOU WON!!!");
+		else if (player1Total < player2Total)
+			System.out.println("Congratulations " + player2.getName() + ". YOU WON!!!");
+		else
+			System.out.println("Congratulations. IT'S A TIE!!!");
 	}
-	
-	private void printScore() {
+
+	/**
+	 * Prints the table of the scores of the players.
+	 * @param showNumbers	if true, prints numbers under the table
+	 */
+	private void printScore(boolean showNumbers) {
 		player1.getScoreCard().printCardHeader();
 		player1.getScoreCard().printPlayerScore(player1);
 		player2.getScoreCard().printPlayerScore(player2);
+		if (showNumbers)
+			System.out.printf("%19d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d%5d\n\n",
+					1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
 	}
 	
 	/**
@@ -144,7 +171,10 @@ public class Yahtzee {
 			player2.setName(name1);
 		}
 	}
-	
+
+	/**
+	 * Prints the header for Monta Vista Yahtzee
+	 */
 	public void printHeader() {
 		System.out.println("\n");
 		System.out.println("+------------------------------------------------------------------------------------+");

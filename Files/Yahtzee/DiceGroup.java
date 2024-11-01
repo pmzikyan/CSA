@@ -18,8 +18,10 @@ public class DiceGroup {
 								"|     O |",
 								"| O     |",
 								"|_______|" };
-	
-	/*	you complete */
+
+	/**
+	 * Sets up the die array
+	 */
 	public DiceGroup() { 
 		die = new Dice[NUM_DICE];
 		
@@ -27,8 +29,10 @@ public class DiceGroup {
 			die[i] = new Dice();
 		
 	}
-	
-	/**	you complete */
+
+	/**
+	 * Rolls all the dice in the die array
+	 */
 	public void rollDice() { 
 		for (int i = 0; i < NUM_DICE; i++)
 			die[i].roll();
@@ -38,8 +42,6 @@ public class DiceGroup {
 	 *	For example: If rawHold is "421", then hold die 1, 2, and 4, and
 	 *	roll 3 and 5.
 	 *	@param rawHold		the string of dice to hold
-	 *
-	 *	you complete
 	 */
 	public void rollDice(String rawHold) 
 	{ 
@@ -56,9 +58,19 @@ public class DiceGroup {
 	}
 	
 	/**	getters - you complete */
-	
+
+	/**
+	 * Returns the value of the number die inputted
+	 * @param num	which die's value will be returned
+	 * @return		the value of the num value die
+	 */
 	public int getDieValue(int num) { return die[num].getValue(); }
-	
+
+	/**
+	 * Returns how many times the inputted number appears in the dice group.
+	 * @param number	which number to check
+	 * @return			the amount of times number appears in the dice
+	 */
 	public int getNumberCount(int number)
 	{
 		int out = 0;
