@@ -6,6 +6,12 @@
  */
 public class HTMLUtilities {
 
+	// NONE = not nested in a block, COMMENT = inside a comment block
+	//PREFORMAT = inside a pre-format block
+	private enum TokenState { NONE, COMMENT, PREFORMAT };
+	// the current tokenizer state
+	private TokenState state; 
+	
 	/**
 	 *	Break the HTML string into tokens. The array returned is
 	 *	exactly the size of the number of tokens in the HTML string.
@@ -15,48 +21,43 @@ public class HTMLUtilities {
 	 *	@return				the String array of tokens
 	 */
 	public String[] tokenizeHTMLString(String str) {
-		// make the size of the array large to start
-		String[] result = new String[20];
-		
-		String tempToken = "";
 		int tokenCount = 0;
-		for (int i = 0; i < str.length(); i++)
+		String[] result = new String[30];
+		
+		str = str.trim();
+		while (str.length() >= 1)
 		{
-			char c = str.charAt(i);
-
-			char tokenChar = '\u0000';
-			if (tempToken.length() > 0)
-				tokenChar = tempToken.charAt(0);
-			if (tokenChar == '<' && c == '>')
-			{
-				tempToken += c;
-				result[tokenCount] = tempToken;
-				tempToken = "";
-				tokenCount++;
+			char c = str.charAt(0);
+			if (str.length() >= 4 && str.substring(0, 4).equals("<!--"))
+				state = TokenState.COMMENT;
+			if (str.length() >= 3 && str.indexOf("-->") != -1) {
+				state = TokenState.NONE;
+				str = str.substring(str.indexOf("-->") + 3);
 			}
-			else if (isPunctuation(tokenChar) && !isPunctuation(c))
-			{
-				result[tokenCount] = tempToken;
-				tempToken = "";
-				tokenCount++;
+			else if (Character.isWhitespace(c))
+				str = str.substring(1);
+			else if (c == '<') {
+				if (state == TokenState.NONE) {
+					result[tokenCount] = str.substring(0, str.indexOf(">") + 1);
+					str = str.substring(str.indexOf(">") + 1);
+					tokenCount++;
+				}
 			}
-			else if (Character.isLetter(tokenChar) && 
-								c != '-' && !Character.isLetter(c))
+			else if (Character.isLetter(c))
 			{
-				result[tokenCount] = tempToken;
-				tempToken = "";
-				tokenCount++;
+				for (int i = 0; i < str.length(); i++);
 			}
 			
-			if (!Character.isWhitespace(c))
-			{
-				tempToken += c;
-			}
+				
 		}
 		
 		// return the correctly sized array
 		return result;
 	}
+		/*if (state = TokenState.NONE) {
+			result[tokenCount] = ;
+			tokenCount++;
+		}*/
 	
 	public boolean isPunctuation(char c)
 	{
@@ -81,3 +82,53 @@ public class HTMLUtilities {
 	}
 
 }
+
+
+/*for (int i = 0; i < str.length(); i++)
+		{
+			char c = str.charAt(i);
+			
+			boolean isComment = false;
+
+			char tokenChar = '\u0000';
+			if (tempToken.length() > 0)
+				tokenChar = tempToken.charAt(0);
+			
+			if (tempToken.length() >= 4 && tempToken.indexOf("<!--") == 0)
+			{
+				isComment = true;
+				if (tempToken.indexOf("-->") != -1)
+				{
+					result[tokenCount] = tempToken;
+					tempToken = "";
+					tokenCount++;
+				}
+			}
+			else if (tokenChar == '<' && c == '>')
+			{
+				tempToken += c;
+				result[tokenCount] = tempToken;
+				tempToken = "";
+				tokenCount++;
+			}
+			else if (isPunctuation(tokenChar) && !isPunctuation(c))
+			{
+				result[tokenCount] = tempToken;
+				tempToken = "";
+				tokenCount++;
+				i--;
+			}
+			else if (Character.isLetter(tokenChar) && 
+								c != '-' && !Character.isLetter(c))
+			{
+				result[tokenCount] = tempToken;
+				tempToken = "";
+				tokenCount++;
+				i--;
+			}
+			
+			if (!Character.isWhitespace(c) || isComment)
+			{
+				tempToken += c;
+			}
+		}*/
