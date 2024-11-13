@@ -12,6 +12,11 @@ public class HTMLUtilities {
 	// the current tokenizer state
 	private TokenState state; 
 	
+	public HTMLUtilities()
+	{
+		state = TokenState.NONE;
+	}
+	
 	/**
 	 *	Break the HTML string into tokens. The array returned is
 	 *	exactly the size of the number of tokens in the HTML string.
@@ -24,31 +29,47 @@ public class HTMLUtilities {
 		int tokenCount = 0;
 		String[] result = new String[30];
 		
-		str = str.trim();
-		while (str.length() >= 1)
+		//str = str.trim();
+		while (str.length() > 0)
 		{
 			char c = str.charAt(0);
 			if (str.length() >= 4 && str.substring(0, 4).equals("<!--"))
 				state = TokenState.COMMENT;
-			if (str.length() >= 3 && str.indexOf("-->") != -1) {
+			if (state == TokenState.COMMENT && 
+					str.length() >= 3 && str.indexOf("-->") != -1) {
 				state = TokenState.NONE;
 				str = str.substring(str.indexOf("-->") + 3);
 			}
-			else if (Character.isWhitespace(c))
-				str = str.substring(1);
-			else if (c == '<') {
-				if (state == TokenState.NONE) {
-					result[tokenCount] = str.substring(0, str.indexOf(">") + 1);
-					str = str.substring(str.indexOf(">") + 1);
-					tokenCount++;
-				}
-			}
-			else if (Character.isLetter(c))
-			{
-				for (int i = 0; i < str.length(); i++);
-			}
 			
-				
+			if (state == TokenState.NONE) {
+				if (Character.isWhitespace(c)) {
+					System.out.println("whitespace");
+					str = str.substring(1); }
+				else if (c == '<') {
+					if (state == TokenState.NONE) {
+						result[tokenCount] = str.substring(0, str.indexOf(">") + 1);
+						str = str.substring(str.indexOf(">") + 1);
+						tokenCount++;
+					}
+				}
+				else if (Character.isLetter(c))
+				{
+					String word = "";
+					boolean loop = true;
+					for (int i = 0; i < str.length() && loop; i++)
+						if (Character.isLetter(str.charAt(i)) 
+									|| str.charAt(i) == '-')
+							word += str.charAt(i);
+						else {
+							result[tokenCount] = word;
+							str = str.substring(i);
+							tokenCount++;
+							loop = false;
+						}
+				}
+				else
+					str = str.substring(1);
+			}
 		}
 		
 		// return the correctly sized array
