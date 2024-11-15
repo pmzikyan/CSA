@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="MasterMind">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Files/MasterMind/MasterMind.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

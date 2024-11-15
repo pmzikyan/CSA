@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mvAcm">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Files/FirstAssignment/mvAcm.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

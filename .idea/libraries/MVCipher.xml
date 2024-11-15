@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="MVCipher">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Files/MVCipher/MVCipher.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
