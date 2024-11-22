@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  *	HTMLRender
  *	This program renders HTML code into a JFrame window.
@@ -35,6 +37,7 @@ public class HTMLRender {
 	private SimpleHtmlRenderer render;
 	private HtmlPrinter browser;
 	
+	private boolean inHtml, inBody, inP, inQ, inB, inI;
 		
 	public HTMLRender() {
 		// Initialize token array
@@ -48,10 +51,78 @@ public class HTMLRender {
 	
 	public static void main(String[] args) {
 		HTMLRender hf = new HTMLRender();
-		hf.run();
+		if (args.length == 0)
+			hf.runSample();
+		else
+			hf.run(args[0]);
 	}
 	
-	public void run() {
+	public void run(String fileName) {
+		FileUtils fileUtils = new FileUtils();
+		HTMLUtilities htmlUtils= new HTMLUtilities();
+		
+		inHtml = inBody = inP = inQ = inB = inI = false;
+		
+		// Open the HTML file
+		Scanner input = FileUtils.openToRead(fileName);
+		
+		// Read each line of the HTML file, tokenize, then print tokens
+		while (input.hasNext()) {
+			String line = input.nextLine();
+			System.out.println("\n" + line);
+			String [] tokens = htmlUtils.tokenizeHTMLString(line);
+			printTokens(tokens);
+		}
+		input.close();
+	}
+	
+	public void printTokens (String[] tokens)
+	{
+		for (int i = 0; i < tokens.length; i++)
+		{
+			switch (tokens[i])
+			{
+				case "<html>":
+					inHtml = true;
+					break;
+				case "</html>":
+					inHtml = false;
+					break;
+				case "<body>":
+					inBody = true;
+					break;
+				case "</body>":
+					inBody = false;
+					break;
+				case "<p>":
+					inP = true;
+					break;
+				case "</p>":
+					inP = false;
+					break;
+				case "<q>":
+					inQ = true;
+					break;
+				case "</q>":
+					inQ = false;
+					break;
+				case "<b>":
+					inB = true;
+					break;
+				case "</b>":
+					inB = false;
+					break;
+				case "<i>":
+					inI = true;
+					break;
+				case "</i>":
+					inI = false;
+					break;
+			}
+		}
+	}
+	
+	public void runSample() {
 		// Sample renderings from HtmlPrinter class
 		
 		// Print plain text without line feed at end
