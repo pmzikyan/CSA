@@ -37,7 +37,9 @@ public class HTMLRender {
 	private SimpleHtmlRenderer render;
 	private HtmlPrinter browser;
 	
-	private boolean inHtml, inBody, inP, inQ, inB, inI;
+	private boolean inB, inI;
+	
+	private int lineLength;
 		
 	public HTMLRender() {
 		// Initialize token array
@@ -46,6 +48,8 @@ public class HTMLRender {
 		// Initialize Simple Browser
 		render = new SimpleHtmlRenderer();
 		browser = render.getHtmlPrinter();
+		
+		lineLength = 0;
 	}
 	
 	
@@ -61,7 +65,7 @@ public class HTMLRender {
 		FileUtils fileUtils = new FileUtils();
 		HTMLUtilities htmlUtils= new HTMLUtilities();
 		
-		inHtml = inBody = inP = inQ = inB = inI = false;
+		inB = inI = false;
 		
 		// Open the HTML file
 		Scanner input = FileUtils.openToRead(fileName);
@@ -69,7 +73,6 @@ public class HTMLRender {
 		// Read each line of the HTML file, tokenize, then print tokens
 		while (input.hasNext()) {
 			String line = input.nextLine();
-			System.out.println("\n" + line);
 			String [] tokens = htmlUtils.tokenizeHTMLString(line);
 			printTokens(tokens);
 		}
@@ -80,31 +83,25 @@ public class HTMLRender {
 	{
 		for (int i = 0; i < tokens.length; i++)
 		{
-			switch (tokens[i])
+			String token = tokens[i];
+			String lowerToken = token.toLowerCase();
+			boolean freshQuotes = false;
+			switch (lowerToken)
 			{
-				case "<html>":
-					inHtml = true;
+				case "<html>": case "</html>": case "<body>": case "</body>":
 					break;
-				case "</html>":
-					inHtml = false;
-					break;
-				case "<body>":
-					inBody = true;
-					break;
-				case "</body>":
-					inBody = false;
-					break;
-				case "<p>":
-					inP = true;
-					break;
-				case "</p>":
-					inP = false;
+				case "<p>": case "</p>":
+					if (lineLength != 0) {
+						browser.println();
+						lineLength = 0;
+					}
 					break;
 				case "<q>":
-					inQ = true;
+					freshQuotes = true;
+					print(" \"");
 					break;
 				case "</q>":
-					inQ = false;
+					print("\"");
 					break;
 				case "<b>":
 					inB = true;
@@ -118,8 +115,46 @@ public class HTMLRender {
 				case "</i>":
 					inI = false;
 					break;
+				case "<br>":
+					browser.printBreak();
+					lineLength = 0;
+					break;
+				case "<hr>":
+					browser.printHorizontalRule();
+					lineLength = 0;
+					break;
+				default:
+					if (lineLength == 0 || token.length() == 0 || freshQuotes);
+					else if ((lineLength + token.length() + 1 > 80) || 
+							(lineLength + token.length() > 80) &&
+								isPunctuation(token.charAt(0))) {
+						browser.println();
+						lineLength = 0;
+					}
+					else if (!isPunctuation(token.charAt(0)))
+						print(" ");
+					print(token);
+					lineLength += token.length();
+					break;
 			}
 		}
+	}
+	
+	private void print(String word)
+	{
+		if (inB)
+			browser.printBold(word);
+		else if (inI)
+			browser.printItalic(word);
+		else
+			browser.print(word);
+	}
+	
+	private boolean isPunctuation(char c)
+	{
+		return c == '.' || c == ',' || c == ';' || c == ':' || c == '(' ||
+				c == ')' || c == '?' || c == '!' || c == '=' || c == '&' ||
+				c == '~' || c == '+' || c == '-';
 	}
 	
 	public void runSample() {

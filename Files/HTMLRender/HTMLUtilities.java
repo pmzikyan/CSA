@@ -27,9 +27,10 @@ public class HTMLUtilities {
 	 */
 	public String[] tokenizeHTMLString(String str) {
 		int tokenCount = 0;
-		String[] result = new String[30];
+		String[] result = new String[50];
 
-		//str = str.trim();
+		
+		int pastLength = 0;
 		while (str.length() > 0)
 		{
 			char c = str.charAt(0);
@@ -126,6 +127,17 @@ public class HTMLUtilities {
 				else
 					str = str.substring(1);
 			}
+			
+			//System.out.println(str.length());
+			
+			if (str.length() > 0 && pastLength == str.length())
+			{
+				result[tokenCount] = str;
+				tokenCount++;
+				str = "";
+			}
+			pastLength = str.length();
+			
 		}
 
 		// return the correctly sized array
