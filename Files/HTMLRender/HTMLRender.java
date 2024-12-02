@@ -40,6 +40,8 @@ public class HTMLRender {
 	private boolean inB, inI;
 	
 	private int lineLength;
+	private final int[] FORMAT_MAX_LENGTH = {80, 40, 50, 60, 80, 100, 120};
+	private int formatOn;
 		
 	public HTMLRender() {
 		// Initialize token array
@@ -50,6 +52,8 @@ public class HTMLRender {
 		browser = render.getHtmlPrinter();
 		
 		lineLength = 0;
+		
+		formatOn = 0;
 	}
 	
 	
@@ -93,6 +97,7 @@ public class HTMLRender {
 				case "<p>": case "</p>":
 					if (lineLength != 0) {
 						browser.println();
+						browser.println();
 						lineLength = 0;
 					}
 					break;
@@ -123,9 +128,32 @@ public class HTMLRender {
 					browser.printHorizontalRule();
 					lineLength = 0;
 					break;
+				case "</h1>": case "</h2>": case "</h3>": case "</h4>": 
+							case "</h5>": case "</h6>":
+					formatOn = 0;
+					break;
+				case "<h1>":
+					formatOn = 1;
+					break;
+				case "<h2>":
+					formatOn = 2;
+					break;
+				case "<h3>":
+					formatOn = 3;
+					break;
+				case "<h4>":
+					formatOn = 4;
+					break;
+				case "<h5>":
+					formatOn = 5;
+					break;
+				case "<h6>":
+					formatOn = 6;
+					break;
 				default:
-					if (lineLength == 0 || token.length() == 0 || freshQuotes);
-					else if ((lineLength + token.length() + 1 > 80) || 
+					if (lineLength == 0 || token.length() == 0 || freshQuotes)
+						freshQuotes = false;
+					else if ((lineLength + token.length() + 1 > FORMAT_MAX_LENGTH[formatOn]) || 
 							(lineLength + token.length() > 80) &&
 								isPunctuation(token.charAt(0))) {
 						browser.println();
@@ -142,10 +170,23 @@ public class HTMLRender {
 	
 	private void print(String word)
 	{
-		if (inB)
+		if (word.length() >= 4 && word.substring(0, 4).equals("<!--"));
+		else if (inB)
 			browser.printBold(word);
 		else if (inI)
 			browser.printItalic(word);
+		else if (formatOn == 1)
+			browser.printHeading1(word);
+		else if (formatOn == 2)
+			browser.printHeading2(word);
+		else if (formatOn == 3)
+			browser.printHeading3(word);
+		else if (formatOn == 4)
+			browser.printHeading4(word);
+		else if (formatOn == 5)
+			browser.printHeading5(word);
+		else if (formatOn == 6)
+			browser.printHeading6(word);
 		else
 			browser.print(word);
 	}
