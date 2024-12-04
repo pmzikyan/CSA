@@ -40,9 +40,12 @@ public class HTMLRender {
 	private boolean inB, inI;
 	
 	private int lineLength;
-	private final int[] FORMAT_MAX_LENGTH = {80, 40, 50, 60, 80, 100, 120};
+	private final int[] FORMAT_MAX_LENGTH = {80, 40, 50, 60, 80, 100, 120, 2147483647};
 	private int formatOn;
 		
+	/**
+	 *	Constructor that initilializes non-final field variables
+	 */
 	public HTMLRender() {
 		// Initialize token array
 		tokens = new String[TOKENS_SIZE];
@@ -50,6 +53,8 @@ public class HTMLRender {
 		// Initialize Simple Browser
 		render = new SimpleHtmlRenderer();
 		browser = render.getHtmlPrinter();
+		
+		inB = inI = false;
 		
 		lineLength = 0;
 		
@@ -64,12 +69,14 @@ public class HTMLRender {
 		else
 			hf.run(args[0]);
 	}
-	
+	/**
+	 *	Goes through the HTML file, tokenizing it with FileUtils,
+	 *	then calls printTokens to print each line of tokens.
+	 *	@param fileName		the name of the file that will be rendered
+	 */
 	public void run(String fileName) {
 		FileUtils fileUtils = new FileUtils();
 		HTMLUtilities htmlUtils= new HTMLUtilities();
-		
-		inB = inI = false;
 		
 		// Open the HTML file
 		Scanner input = FileUtils.openToRead(fileName);
@@ -83,6 +90,11 @@ public class HTMLRender {
 		input.close();
 	}
 	
+	/**
+	 *	Prints the line of tokens (in the form of a String array)
+	 *	Also does the special actions for the HMTL tags
+	 *	@param tokens	the array of tokens
+	 */
 	public void printTokens (String[] tokens)
 	{
 		for (int i = 0; i < tokens.length; i++)
@@ -129,26 +141,41 @@ public class HTMLRender {
 					lineLength = 0;
 					break;
 				case "</h1>": case "</h2>": case "</h3>": case "</h4>": 
-							case "</h5>": case "</h6>":
+							case "</h5>": case "</h6>": case "</pre>":
 					formatOn = 0;
 					break;
 				case "<h1>":
+					lineLength = 0;
+					browser.println();
 					formatOn = 1;
 					break;
 				case "<h2>":
+					lineLength = 0;
+					browser.println();
 					formatOn = 2;
 					break;
 				case "<h3>":
+					lineLength = 0;
+					browser.println();
 					formatOn = 3;
 					break;
 				case "<h4>":
+					lineLength = 0;
+					browser.println();
 					formatOn = 4;
 					break;
 				case "<h5>":
+					lineLength = 0;
+					browser.println();
 					formatOn = 5;
 					break;
 				case "<h6>":
+					lineLength = 0;
+					browser.println();
 					formatOn = 6;
+					break;
+				case "<pre>":
+					formatOn = 7;
 					break;
 				default:
 					if (lineLength == 0 || token.length() == 0 || freshQuotes)
@@ -161,6 +188,10 @@ public class HTMLRender {
 					}
 					else if (!isPunctuation(token.charAt(0)))
 						print(" ");
+					
+					if (token.length() > 0 && !isPunctuation(token.charAt(0)) 
+														&& lineLength != 0)
+						lineLength++;
 					print(token);
 					lineLength += token.length();
 					break;
@@ -168,8 +199,12 @@ public class HTMLRender {
 		}
 	}
 	
+	/**
+	 *	Prints individual words (tokens) in the correct type of format
+	 *	@param word		the word (or token) that is going to be printed
+	 */
 	private void print(String word)
-	{
+	{	
 		if (word.length() >= 4 && word.substring(0, 4).equals("<!--"));
 		else if (inB)
 			browser.printBold(word);
@@ -187,10 +222,20 @@ public class HTMLRender {
 			browser.printHeading5(word);
 		else if (formatOn == 6)
 			browser.printHeading6(word);
+		else if (formatOn == 7) {
+			browser.printPreformattedText(word);
+			browser.println();
+		}
 		else
 			browser.print(word);
+		
 	}
 	
+	/**
+	 *	Returns true if the inputted char is a type of valid punctuation, else false
+	 * 	@return		if char c is punctuation
+	 *	@param c	character to be checked to be punctuation
+	 */
 	private boolean isPunctuation(char c)
 	{
 		return c == '.' || c == ',' || c == ';' || c == ':' || c == '(' ||
@@ -198,6 +243,10 @@ public class HTMLRender {
 				c == '~' || c == '+' || c == '-';
 	}
 	
+	/**
+	 *	Sample code that was given already
+	 *	Runs when no file is written in the args
+	 */
 	public void runSample() {
 		// Sample renderings from HtmlPrinter class
 		

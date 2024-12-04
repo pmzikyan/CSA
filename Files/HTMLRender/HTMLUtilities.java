@@ -58,7 +58,8 @@ public class HTMLUtilities {
 				str = str.substring(str.indexOf("</pre>") + 6);
 			}
 
-			if (state == TokenState.PREFORMAT)
+			if (state == TokenState.COMMENT);
+			else if (state == TokenState.PREFORMAT)
 			{
 				result[tokenCount] = str;
 				str = "";
@@ -130,7 +131,12 @@ public class HTMLUtilities {
 			
 			//System.out.println(str.length());
 			
-			if (str.length() > 0 && pastLength == str.length())
+			if (state == TokenState.COMMENT)
+			{
+				if (str.indexOf("-->") == -1)
+					str = "";
+			}
+			else if (str.length() > 0 && pastLength == str.length())
 			{
 				result[tokenCount] = str;
 				tokenCount++;
