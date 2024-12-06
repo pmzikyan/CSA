@@ -12,9 +12,12 @@ public class City implements Comparable<City> {
 	private int population;
 	
 	// constructor
-	public City()
+	public City(String n, String s, String d, int p)
 	{
-		
+		name = n;
+		state = s;
+		designation = d;
+		population = p;
 	}
 	/**	Compare two cities populations
 	 *	@param other		the other City to compare
@@ -23,6 +26,7 @@ public class City implements Comparable<City> {
 	 *		else if states are different, then returns (this.state - other.state)
 	 *		else returns (this.name - other.name)
 	 */
+	 @Override
 	 public int compareTo(City other)
 	 {
 		 int out = population - other.getPopulation();

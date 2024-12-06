@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Scanner;
 /**
  *	Population - <description goes here>
  *
@@ -15,6 +16,29 @@ public class Population {
 	// US data file
 	private final String DATA_FILE = "usPopData2017.txt";
 	
+	public static void main(String[] args) {
+		Population pop = new Population();
+		pop.fileReaderLoader();
+		pop.run();
+	}
+	
+	public void run()
+	{
+		printIntroduction();
+	}
+	
+	public void fileReaderLoader()
+	{
+		FileUtils fu = new FileUtils();
+		Scanner text = fu.openToRead(DATA_FILE).useDelimiter("[\t\n]");;
+		
+		cities = new ArrayList<>();
+		while (text.hasNextLine())
+		{
+			
+			list.add(new City());
+		}
+	}
 	
 	/**	Prints the introduction to Population */
 	public void printIntroduction() {
