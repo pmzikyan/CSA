@@ -12,13 +12,12 @@ public class City implements Comparable<City> {
 	private int population;
 	
 	// constructor
-	public City(String n, String s, String d, int p)
+	public City() 
 	{
-		name = n;
-		state = s;
-		designation = d;
-		population = p;
+		name = state = designation = "";
+		population = 0;
 	}
+	
 	/**	Compare two cities populations
 	 *	@param other		the other City to compare
 	 *	@return				the following value:
@@ -37,6 +36,14 @@ public class City implements Comparable<City> {
 		 
 		 return name.compareTo(other.getName());
 	 }
+	 
+	public void setUpCity(String n, String s, String d, int p)
+	{
+		name = n;
+		state = s;
+		designation = d;
+		population = p;
+	}
 	
 	/**	Equal city name and state name
 	 *	@param other		the other City to compare

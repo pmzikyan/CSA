@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Scanner;
+import java.util.ArrayList;
 /**
  *	Population - <description goes here>
  *
@@ -25,6 +26,8 @@ public class Population {
 	public void run()
 	{
 		printIntroduction();
+		
+		//System.out.println(cities.size() + "cities in database");
 	}
 	
 	public void fileReaderLoader()
@@ -32,11 +35,12 @@ public class Population {
 		FileUtils fu = new FileUtils();
 		Scanner text = fu.openToRead(DATA_FILE).useDelimiter("[\t\n]");;
 		
-		cities = new ArrayList<>();
+		cities = new ArrayList<City>();
 		while (text.hasNextLine())
 		{
-			
-			list.add(new City());
+			City city = new City();
+			city.setUpCity(text.next(), text.next(), text.next(), text.nextInt());
+			cities.add(city);
 		}
 	}
 	
@@ -62,4 +66,11 @@ public class Population {
 		System.out.println("9. Quit");
 	}
 	
+}
+
+class SortMethods {
+	public void one(List<City> list)
+	{
+		
+	}
 }
