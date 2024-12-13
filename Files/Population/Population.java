@@ -16,6 +16,7 @@ public class Population {
 	
 	// US data file
 	private final String DATA_FILE = "usPopData2017.txt";
+	private final String FORMAT = "%5s%-23s%-23s%-15s%10s\n";
 	
 	public static void main(String[] args) {
 		Population pop = new Population();
@@ -25,22 +26,91 @@ public class Population {
 	
 	public void run()
 	{
+		Prompt ask = new Prompt();
+		SortMethods sort = new SortMethods();
 		printIntroduction();
 		
-		//System.out.println(cities.size() + "cities in database");
+		System.out.println(cities.size() + " cities in database");
+
+		boolean loop = true;
+		while (loop)
+		{
+			System.out.println();
+			printMenu();
+			int selection = ask.getInt("Enter selection");
+			while (!(selection == 9 || selection >= 1 && selection <= 6))
+				selection = ask.getInt("Enter selection");
+
+			long startMillisec = System.currentTimeMillis();
+			switch (selection)
+			{
+				case 1:
+					sort.one(cities);
+					break;
+				case 2:
+					sort.two(cities);
+					break;
+				case 3:
+					sort.three(cities);
+					break;
+				case 4:
+					sort.four(cities);
+					break;
+				case 5:
+					sort.five(cities);
+					break;
+				case 6:
+					sort.six(cities);
+					break;
+				case 9:
+					loop = false;
+			}
+			if (selection < 6)
+				top50Printer();
+			else if (selection == 6)
+				sameNamePrinter();
+
+			if (loop)
+				System.out.println("\nElapsed Time " + (System.currentTimeMillis() - startMillisec) + " milliseconds");
+		}
+	}
+
+	private void top50Printer()
+	{
+		printCity(-1);
+		for (int i = 0; i < 50 && i < cities.size(); i++)
+			printCity(i);
+	}
+
+	private void sameNamePrinter()
+	{
+		String cityName = cities.get(0).getName();
+		int counter = 1;
+		while (cities.get(counter-1).equals(cityName))
+		{
+
+		}
+	}
+
+	private void printCity(int index) {
+		if (index == -1)
+			System.out.printf(FORMAT, "", "State", "City", "Type", "Population");
+		else {
+			City city = cities.get(index);
+			System.out.printf(FORMAT, index + 1 + ": ", city.getState(),
+					city.getName(), city.getDesignation(), city.getPopulation());
+		}
 	}
 	
-	public void fileReaderLoader()
+	private void fileReaderLoader()
 	{
 		FileUtils fu = new FileUtils();
 		Scanner text = fu.openToRead(DATA_FILE).useDelimiter("[\t\n]");;
 		
 		cities = new ArrayList<City>();
-		while (text.hasNextLine())
+		while (text.hasNext())
 		{
-			City city = new City();
-			city.setUpCity(text.next(), text.next(), text.next(), text.nextInt());
-			cities.add(city);
+			cities.add(new City (text.next(), text.next(), text.next(), text.nextInt()));
 		}
 	}
 	
@@ -71,6 +141,131 @@ public class Population {
 class SortMethods {
 	public void one(List<City> list)
 	{
-		
+		for (int i = 0; i < list.size(); i++) {
+			int min = i;
+			for (int a = i + 1; a < list.size(); a++) {
+				if (list.get(min).compareTo(list.get(a)) > 0)
+					swap(list, a, min);
+			}
+		}
+	}
+
+	public List<City> two(List<City> list)
+	{
+		if (list.size() > 2) {
+			List<City> l1 = new ArrayList<City>();
+			List<City> l2 = new ArrayList<City>();
+			for (int i = 0; i < list.size(); i++)
+			{
+				if (i <= list.size()/2)
+					l1.add(list.get(i));
+				else
+					l2.add(list.get(i));
+			}
+			l1 = two(l1);
+			l2 = two(l2);
+
+			int p1, p2; //pointers
+			p1 = p2 = 0;
+			while (p1 < l1.size() && p2 < l2.size())
+			{
+				City c1 = l1.get(p1);
+				City c2 = l2.get(p2);
+				if (c1.compareTo(c2) >= 0) {
+					list.set(p1 + p2, c1);
+					p1++;
+				}
+				else {
+					list.set(p1 + p2, c2);
+					p2++;
+				}
+			}
+			if (p1 < l1.size())
+				for (int i = p1; i < l1.size(); i++)
+					list.set(i + p2, l1.get(i));
+			if (p2 < l2.size())
+				for (int i = p2; i < l2.size(); i++)
+					list.set(i + p1, l2.get(i));
+		}
+		else if (list.size() == 2 && list.get(0).compareTo(list.get(1)) < 0) {
+			City c = list.get(0);
+			list.set(0, list.get(1));
+			list.set(1, c);
+		}
+
+		return list;
+	}
+
+	public void three(List<City> list)
+	{
+		CityComparatorByName compare = new CityComparatorByName();
+		for (int i = 0; i < list.size() - 1; i++) {
+			for (int j = i + 1; j < list.size) {
+
+			}
+		}
+	}
+
+	public List<City> four(List<City> list)
+	{
+		CityComparatorByName compare = new CityComparatorByName();
+		if (list.size() > 2) {
+			List<City> l1 = new ArrayList<City>();
+			List<City> l2 = new ArrayList<City>();
+			for (int i = 0; i < list.size(); i++)
+			{
+				if (i <= list.size()/2)
+					l1.add(list.get(i));
+				else
+					l2.add(list.get(i));
+			}
+			l1 = four(l1);
+			l2 = four(l2);
+
+			int p1, p2; //pointers
+			p1 = p2 = 0;
+			while (p1 < l1.size() && p2 < l2.size())
+			{
+				City c1 = l1.get(p1);
+				City c2 = l2.get(p2);
+				if (compare.compare(c1, c2) >= 0) {
+					list.set(p1 + p2, c1);
+					p1++;
+				}
+				else {
+					list.set(p1 + p2, c2);
+					p2++;
+				}
+			}
+			if (p1 < l1.size())
+				for (int i = p1; i < l1.size(); i++)
+					list.set(i + p2, l1.get(i));
+			if (p2 < l2.size())
+				for (int i = p2; i < l2.size(); i++)
+					list.set(i + p1, l2.get(i));
+		}
+		else if (list.size() == 2 && compare.compare(list.get(0), list.get(1)) < 0) {
+			City c = list.get(0);
+			list.set(0, list.get(1));
+			list.set(1, c);
+		}
+
+		return list;
+	}
+
+	public void five(List<City> list)
+	{
+
+	}
+
+	public void six(List<City> list)
+	{
+
+	}
+
+	private void swap(List<City> list, int a, int b) {
+		City city = list.get(a);
+		list.set(a, list.get(b));
+		list.set(b, city);
 	}
 }
