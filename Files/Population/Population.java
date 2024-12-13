@@ -70,7 +70,7 @@ public class Population {
 			else if (selection == 6)
 				sameNamePrinter();
 
-			if (loop)
+			if (selection < 5)
 				System.out.println("\nElapsed Time " + (System.currentTimeMillis() - startMillisec) + " milliseconds");
 		}
 	}
@@ -198,17 +198,21 @@ class SortMethods {
 
 	public void three(List<City> list)
 	{
-		CityComparatorByName compare = new CityComparatorByName();
-		for (int i = 0; i < list.size() - 1; i++) {
-			for (int j = i + 1; j < list.size) {
-
-			}
+		CityComparatorByName comparator = new CityComparatorByName();
+		//System.out.println(list.get(0).getName() + ", " + list.get(500).getName()
+				+ comparator.compare(list.get(0), list.get(500)));
+		for (int i = 1; i < list.size(); i++) {
+			int j;
+			for (j = i; j > 0 && comparator.compare(list.get(j), list.get(i)) >= 0; j--);
+				//System.out.println(i + ", " + comparator.compare(list.get(j), list.get(i)));
+			//System.out.println(j + ", " + i);
+			list.set(j, list.remove(i));
 		}
 	}
 
 	public List<City> four(List<City> list)
 	{
-		CityComparatorByName compare = new CityComparatorByName();
+		CityComparatorByName comparator = new CityComparatorByName();
 		if (list.size() > 2) {
 			List<City> l1 = new ArrayList<City>();
 			List<City> l2 = new ArrayList<City>();
@@ -228,7 +232,7 @@ class SortMethods {
 			{
 				City c1 = l1.get(p1);
 				City c2 = l2.get(p2);
-				if (compare.compare(c1, c2) >= 0) {
+				if (comparator.compare(c1, c2) >= 0) {
 					list.set(p1 + p2, c1);
 					p1++;
 				}
@@ -244,7 +248,7 @@ class SortMethods {
 				for (int i = p2; i < l2.size(); i++)
 					list.set(i + p1, l2.get(i));
 		}
-		else if (list.size() == 2 && compare.compare(list.get(0), list.get(1)) < 0) {
+		else if (list.size() == 2 && comparator.compare(list.get(0), list.get(1)) < 0) {
 			City c = list.get(0);
 			list.set(0, list.get(1));
 			list.set(1, c);
@@ -253,7 +257,7 @@ class SortMethods {
 		return list;
 	}
 
-	public void five(List<City> list)
+	/*public void five(List<City> list)
 	{
 
 	}
@@ -261,7 +265,7 @@ class SortMethods {
 	public void six(List<City> list)
 	{
 
-	}
+	}*/
 
 	private void swap(List<City> list, int a, int b) {
 		City city = list.get(a);
