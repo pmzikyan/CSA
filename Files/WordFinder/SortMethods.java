@@ -19,6 +19,7 @@ public class SortMethods {
 	 */
 	public void mergeSort(List<String> arr) {
 		mergeSortRecurse(arr, 0, arr.size() - 1);
+		//printStrs(arr);
 	}
 	
 	/**
@@ -39,7 +40,15 @@ public class SortMethods {
 			mergeSortRecurse(arr, mid + 1, last);
 		}
 		merge(arr, first, mid, last);
-		
+	}
+	
+	/**
+	 *	Prints the objects in a list of strings
+	 *	@param arr		List of String objects to print
+	 */
+	 public void printStrs(List<String> arr) {
+		 for (int i = 0; i < 50; i++)
+			System.out.println(arr.get(i));
 	}
 	
 	/**
