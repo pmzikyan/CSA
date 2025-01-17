@@ -59,10 +59,10 @@ public class WordFinder {
 		if (listOfWords.size() == 0) return -1;
 		
 		// otherwise, recursively perform binary search to find target word
-		return binarySearchRecurse(listOfWords, target, 0, listOfWords.size() - 1);
+		//return binarySearchRecurse(listOfWords, target, 0, listOfWords.size() - 1);
 		
 		// otherwise, iteratively perform binary search to find target word
-		//return binarySearchIterative(listOfWords, target);
+		return binarySearchIterative(listOfWords, target);
 	}
 	
 	/**
@@ -112,6 +112,22 @@ public class WordFinder {
 	public int binarySearchIterative(List<String> listOfWords, String target) {
 		// Insert your code here
 		
+		int low = 0, high = listOfWords.size() - 1;
+		//System.out.println(listOfWords.get(41276));
+		//System.out.println("student".compareTo("studded"));
+		while (low <= high) {
+			int mid = (low + high)/2;
+			int compare = target.compareTo(listOfWords.get(mid));
+			
+			//System.out.println("(" + high + " + " + low + ")/2 = " + mid + " and " + compare);
+			//System.out.println(target + " compared with " + listOfWords.get(mid));
+			if (compare < 0)
+				high = mid - 1;
+			else if (compare > 0)
+				low = mid + 1;
+			else
+				return mid;
+		}
 		// if target not found in list return negative number
 		return -1;
 	}
