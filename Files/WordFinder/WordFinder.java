@@ -89,7 +89,7 @@ public class WordFinder {
 		
 		// if target is equal to mid then return the index of the matching word
 		if (compare == 0) return mid;
-		System.out.println(listOfWords.get(mid) + " at " + mid);
+		//System.out.println(listOfWords.get(mid) + " at " + mid);
 		
 		// if target is less than mid, then check bottom of list recursively
 		if (compare < 0) 

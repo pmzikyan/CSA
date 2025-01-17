@@ -19,7 +19,6 @@ public class SortMethods {
 	 */
 	public void mergeSort(List<String> arr) {
 		mergeSortRecurse(arr, 0, arr.size() - 1);
-		//printStrs(arr);
 	}
 	
 	/**
@@ -31,24 +30,16 @@ public class SortMethods {
 	public void mergeSortRecurse(List<String> arr, int first, int last) {
 		// insert your code here
 		int size = last - first + 1;
-		//System.out.println(size);
-		int mid = first + size/2;
-		//System.out.println(mid + ", " + size);
-		
-		if (size > 2) {
-			mergeSortRecurse(arr, first, mid);
-			mergeSortRecurse(arr, mid + 1, last);
-		}
+
+		if (size == 1)
+			return;
+
+		int mid = first + size/2 - 1;
+
+		mergeSortRecurse(arr, first, mid);
+		mergeSortRecurse(arr, mid + 1, last);
+
 		merge(arr, first, mid, last);
-	}
-	
-	/**
-	 *	Prints the objects in a list of strings
-	 *	@param arr		List of String objects to print
-	 */
-	 public void printStrs(List<String> arr) {
-		 for (int i = 0; i < 50; i++)
-			System.out.println(arr.get(i));
 	}
 	
 	/**
@@ -62,12 +53,16 @@ public class SortMethods {
 	public void merge(List<String> arr, int first, int mid, int last) {
 		// Insert your code here
 		int index1 = first, index2 = mid + 1;
-		while (index1 < index2 && index2 < last) {
-			if (arr.get(index1).compareTo(arr.get(index2)) > 0)
+		while (index1 <= last && index2 <= last) {
+
+			if (arr.get(index1).compareTo(arr.get(index2)) < 0) {
+				index1++;
+			}
+			else {
 				arr.add(index1, arr.remove(index2));
-			
-			index1++;
-			index2++;
+				index2++;
+				index1++;
+			}
 		}
 	}
 
