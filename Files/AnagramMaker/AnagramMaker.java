@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *	AnagramMaker - <description goes here>
  *
@@ -19,7 +22,9 @@ public class AnagramMaker {
 	private int numWords;		// the number of words in a phrase to print
 	private int maxPhrases;		// the maximum number of phrases to print
 	private int numPhrases;		// the number of phrases that have been printed
-		
+	
+	private ArrayList<String> anagram;	// list of words that are the anagram
+			
 	/*	Initialize the database inside WordUtilities
 	 *	The database of words does NOT have to be sorted for AnagramMaker to work,
 	 *	but the output will appear in order if you DO sort.
@@ -59,8 +64,38 @@ public class AnagramMaker {
 	 *	characters.
 	 */
 	public void runAnagramMaker() {
-
+		Prompt ask = new Prompt();
+		String input = removeNonAlphabeticCharacters(ask.getString(
+				"Word(s), name or phrase (q to quit)").toLowerCase());
+		while (!input.equals("q")) {
+			numWords = ask.getInt("Number of words in anagram");
+			maxPhrases = ask.getInt("Maximum number of anagrams to print");
+			
+			Str
+			
+			
+			input = removeNonAlphabeticCharacters(ask.getString(
+				"Word(s), name or phrase (q to quit)").toLowerCase());
+		}
 	}
-
 	
+	public void anagramFinder(String letters) {
+		if (letters.length() == 0) {
+			
+			return;
+		}
+	}
+	
+	/**
+	 *	Returns the inputted String, but without characters that aren't letters
+	 *	@param	original	the original String
+	 *	@return 			the original String but only letters
+	 */
+	public String removeNonAlphabeticCharacters(String original) {
+		String out = "";
+		for (int i = 0; i < original.length(); i++)
+			if (Character.isLetter(original.charAt(i)))
+				out += original.charAt(i);
+		return out;
+	}
 }
