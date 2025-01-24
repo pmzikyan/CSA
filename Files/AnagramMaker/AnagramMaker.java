@@ -87,19 +87,19 @@ public class AnagramMaker {
 	}
 
 	public void assembleAnagram(List<String> anagram, String phrase) {
+		int anagramLength = 0;
+		for (int i = 0; i < anagram.size(); i++)
+			anagramLength += anagram.get(i).length();
+		if (anagramLength > phraseLength || anagram.size() > numWords)
+			return;
 		if (phrase.length() == 0)
 		{
 			//System.out.println("finish = " + anagram + " and " + phrase);
-			if (anagram.size() == numWords) {
-				int anagramLength = 0;
+			if (anagram.size() == numWords && anagramLength == phraseLength) {
 				for (int i = 0; i < anagram.size(); i++)
-					anagramLength += anagram.get(i).length();
-				if (anagramLength == phraseLength) {
-					for (int i = 0; i < anagram.size(); i++)
-						System.out.print(anagram.get(i) + " ");
-					System.out.println();
-					numPhrases++;
-				}
+					System.out.print(anagram.get(i) + " ");
+				System.out.println();
+				numPhrases++;
 			}
 		}
 		else
@@ -135,6 +135,12 @@ public class AnagramMaker {
 		return out;
 	}
 
+	/**
+	 *	Returns word with the the letters removed
+	 *	@param	word	the word/phrase to be changed
+	 * 	@param	letters	the letters to remove from word
+	 *	@return 		word without the letters from the String letters
+	 */
 	public String removeLetters(String word, String letters) {
 		String out = "";
 		for (int a = 0; a < word.length(); a++) {
