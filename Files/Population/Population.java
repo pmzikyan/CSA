@@ -2,7 +2,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 /**
- *	Population - <description goes here>
+ *	Population - Program that utilizes Comparator/Comparable and different types
+ *	of sorting to sort US cities in different ways
  *
  *	Requires FileUtils and Prompt classes.
  *
@@ -23,7 +24,11 @@ public class Population {
 		pop.fileReaderLoader();
 		pop.run();
 	}
-	
+
+	/**
+	 *	Runs Population in a loop until user quits
+	 * 	Utilizes other methods and classes to sort the cities field variable
+	 */
 	public void run()
 	{
 		Prompt ask = new Prompt();
@@ -42,39 +47,93 @@ public class Population {
 				selection = ask.getInt("Enter selection");
 
 			long startMillisec = System.currentTimeMillis();
+			int counter = 0;
 			switch (selection)
 			{
 				case 1:
 					sort.one(cities);
+					System.out.println("\nFifty least populous cities");
 					break;
 				case 2:
 					sort.two(cities);
+					System.out.println("\nFifty most populous cities");
 					break;
 				case 3:
 					sort.three(cities);
+					System.out.println("\nFifty most populous cities");
 					break;
 				case 4:
 					sort.four(cities);
+					System.out.println("\nFifty cities sorted by name descending");
 					break;
 				case 5:
-					sort.five(cities);
+					String state;
+					System.out.println();
+					do
+						state = ask.getString("Enter state name (ie. Alabama)");
+					while (!validState(state));
+					System.out.println();
+
+					sort.two(cities);
+					printCity(-1);
+					counter = 0;
+					for (int i = 0; i < cities.size() && counter < 50; i++) {
+						if (cities.get(i).getState().equalsIgnoreCase(state)) {
+							counter++;
+							City city = cities.get(i);
+							System.out.printf(FORMAT, counter + ": ", city.getState(),
+									city.getName(), city.getDesignation(), city.getPopulation());
+						}
+					}
 					break;
 				case 6:
-					sort.six(cities);
+					System.out.println();
+					String cityName = ask.getString("Enter city name");
+					System.out.println();
+
+					sort.two(cities);
+					printCity(-1);
+					counter = 0;
+					for (int i = 0; i < cities.size() && counter < 50; i++) {
+						if (cities.get(i).getName().equalsIgnoreCase(cityName)) {
+							counter++;
+							City city = cities.get(i);
+							System.out.printf(FORMAT, counter + ": ", city.getState(),
+									city.getName(), city.getDesignation(), city.getPopulation());
+						}
+					}
 					break;
 				case 9:
 					loop = false;
 			}
-			if (selection < 6)
+			if (selection < 5)
 				top50Printer();
-			else if (selection == 6)
-				sameNamePrinter();
 
 			if (selection < 5)
 				System.out.println("\nElapsed Time " + (System.currentTimeMillis() - startMillisec) + " milliseconds");
 		}
+
+		System.out.println("\nThanks for using Population!");
 	}
 
+	/**
+	 * Checks if the inputted string is a valid US state
+	 * @param state		String to check if it's a valid state
+	 * @return			if state is valid (true if it is and false if not)
+	 */
+	private boolean validState(String state)
+	{
+		for (int i = 0; i < cities.size(); i++)
+		{
+			if (state.equalsIgnoreCase(cities.get(i).getState()))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Prints the first 50 (or top 50 after sorting) cities from the cities array
+	 */
 	private void top50Printer()
 	{
 		printCity(-1);
@@ -82,16 +141,10 @@ public class Population {
 			printCity(i);
 	}
 
-	private void sameNamePrinter()
-	{
-		String cityName = cities.get(0).getName();
-		int counter = 1;
-		while (cities.get(counter-1).equals(cityName))
-		{
-
-		}
-	}
-
+	/**
+	 * Prints a singular line of info for a city
+	 * @param index		the index to use to get the city from the cities array
+	 */
 	private void printCity(int index) {
 		if (index == -1)
 			System.out.printf(FORMAT, "", "State", "City", "Type", "Population");
@@ -101,7 +154,10 @@ public class Population {
 					city.getName(), city.getDesignation(), city.getPopulation());
 		}
 	}
-	
+
+	/**
+	 * Reads the population data text file and loads the data to the cities array
+	 */
 	private void fileReaderLoader()
 	{
 		FileUtils fu = new FileUtils();
@@ -138,7 +194,15 @@ public class Population {
 	
 }
 
+/**
+ *	Used to sort City objects in different ways from the inputted List<City>
+ */
 class SortMethods {
+
+	/**
+	 * Sorts cities by population in increasing order
+	 * @param list		list to be sorted
+	 */
 	public void one(List<City> list)
 	{
 		for (int i = 0; i < list.size(); i++) {
@@ -150,6 +214,11 @@ class SortMethods {
 		}
 	}
 
+	/**
+	 * Sorts cities by population in decreasing order
+	 * @param list		list to be sorted
+	 * @return 			sorted list
+	 */
 	public List<City> two(List<City> list)
 	{
 		if (list.size() > 2) {
@@ -196,20 +265,26 @@ class SortMethods {
 		return list;
 	}
 
+	/**
+	 * Sorts cities by name in increasing order
+	 * @param list		list to be sorted
+	 */
 	public void three(List<City> list)
 	{
 		CityComparatorByName comparator = new CityComparatorByName();
-		//System.out.println(list.get(0).getName() + ", " + list.get(500).getName()
-				+ comparator.compare(list.get(0), list.get(500)));
 		for (int i = 1; i < list.size(); i++) {
 			int j;
 			for (j = i; j > 0 && comparator.compare(list.get(j), list.get(i)) >= 0; j--);
-				//System.out.println(i + ", " + comparator.compare(list.get(j), list.get(i)));
-			//System.out.println(j + ", " + i);
-			list.set(j, list.remove(i));
+			list.set(j+1, list.get(i));
+			list.remove(1+i);
 		}
 	}
 
+	/**
+	 * Sorts cities by name in decreasing order
+	 * @param list		list to be sorted
+	 * @return 			sorted list
+	 */
 	public List<City> four(List<City> list)
 	{
 		CityComparatorByName comparator = new CityComparatorByName();
@@ -257,16 +332,12 @@ class SortMethods {
 		return list;
 	}
 
-	/*public void five(List<City> list)
-	{
-
-	}
-
-	public void six(List<City> list)
-	{
-
-	}*/
-
+	/**
+	 * Swaps two City object of a list of the objects
+	 * @param list	list of cities
+	 * @param a		index of the first city
+	 * @param b		index of the second city
+	 */
 	private void swap(List<City> list, int a, int b) {
 		City city = list.get(a);
 		list.set(a, list.get(b));

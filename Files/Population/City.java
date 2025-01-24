@@ -11,7 +11,7 @@ public class City implements Comparable<City> {
 	private String name, state, designation;
 	private int population;
 	
-	// constructor
+	// constructor - sets up the name, state, designation, and population
 	public City (String s, String n, String d, int p)
 	{
 		name = n;

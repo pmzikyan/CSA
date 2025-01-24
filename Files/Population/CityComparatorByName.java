@@ -8,6 +8,12 @@ import java.util.Comparator;
  *	@since	12/2/2024
  */
 public class CityComparatorByName implements Comparator<City> {
+	/**
+	 * Compares two City objects by name, and if they're the same then by population
+	 * @param c1	first city
+	 * @param c2	second city
+	 * @return		the difference between the names/populations of the two cities
+	 */
 	public int compare(City c1, City c2)
 	{
 
@@ -16,5 +22,4 @@ public class CityComparatorByName implements Comparator<City> {
 
 		return c1.getPopulation() - c2.getPopulation();
 	}
-	//public boolean equals(City c1, City c2) { return c1.equals(c2); }
 }

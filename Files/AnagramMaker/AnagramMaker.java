@@ -22,9 +22,8 @@ public class AnagramMaker {
 	private int numWords;		// the number of words in a phrase to print
 	private int maxPhrases;		// the maximum number of phrases to print
 	private int numPhrases;		// the number of phrases that have been printed
+	private int phraseLength;	// the length of the phrase
 	
-	private ArrayList<String> anagram;	// list of words that are the anagram
-			
 	/*	Initialize the database inside WordUtilities
 	 *	The database of words does NOT have to be sorted for AnagramMaker to work,
 	 *	but the output will appear in order if you DO sort.
@@ -65,24 +64,61 @@ public class AnagramMaker {
 	 */
 	public void runAnagramMaker() {
 		Prompt ask = new Prompt();
-		String input = removeNonAlphabeticCharacters(ask.getString(
-				"Word(s), name or phrase (q to quit)").toLowerCase());
-		while (!input.equals("q")) {
+		String phrase = ask.getString("Word(s), name or phrase (q to quit)");
+		while (!phrase.equals("q")) {
 			numWords = ask.getInt("Number of words in anagram");
 			maxPhrases = ask.getInt("Maximum number of anagrams to print");
-			
-			Str
-			
-			
-			input = removeNonAlphabeticCharacters(ask.getString(
-				"Word(s), name or phrase (q to quit)").toLowerCase());
+			System.out.println();
+
+			List<String> anagram = new ArrayList<String>();
+			phrase = removeNonAlphabeticCharacters(phrase);
+			phraseLength = phrase.length();
+
+			numPhrases = 0;
+			assembleAnagram(anagram, phrase);
+
+			if (numPhrases < maxPhrases)
+				System.out.println("\nEnded at " + numPhrases + " anagrams");
+			else
+				System.out.println("\nStopped at " + numPhrases + " anagrams");
+
+			phrase = ask.getString("\nWord(s), name or phrase (q to quit)");
 		}
 	}
-	
-	public void anagramFinder(String letters) {
-		if (letters.length() == 0) {
-			
-			return;
+
+	public void assembleAnagram(List<String> anagram, String phrase) {
+		if (phrase.length() == 0)
+		{
+			//System.out.println("finish = " + anagram + " and " + phrase);
+			if (anagram.size() == numWords) {
+				int anagramLength = 0;
+				for (int i = 0; i < anagram.size(); i++)
+					anagramLength += anagram.get(i).length();
+				if (anagramLength == phraseLength) {
+					for (int i = 0; i < anagram.size(); i++)
+						System.out.print(anagram.get(i) + " ");
+					System.out.println();
+					numPhrases++;
+				}
+			}
+		}
+		else
+		{
+			List<String> allWords = wu.allWords(phrase);
+			for (int i = 0; i < allWords.size(); i++) {
+				anagram.add(allWords.get(i));
+				String newPhrase = removeLetters(phrase, allWords.get(i));
+
+				/*System.out.print(allWords);
+				System.out.println(anagram);
+				System.out.println(phrase + " -> " + newPhrase);*/
+				if (numPhrases < maxPhrases)
+					assembleAnagram(anagram, newPhrase);
+				else
+					return;
+
+				anagram.remove(anagram.size() - 1);
+			}
 		}
 	}
 	
@@ -96,6 +132,20 @@ public class AnagramMaker {
 		for (int i = 0; i < original.length(); i++)
 			if (Character.isLetter(original.charAt(i)))
 				out += original.charAt(i);
+		return out;
+	}
+
+	public String removeLetters(String word, String letters) {
+		String out = "";
+		for (int a = 0; a < word.length(); a++) {
+
+			boolean letterRemoved = false;
+			for (int b = 0; b < letters.length() && !letterRemoved; b++)
+				if (word.charAt(a) == letters.charAt(b))
+					letterRemoved = true;
+			if (!letterRemoved)
+				out += word.charAt(a);
+		}
 		return out;
 	}
 }
