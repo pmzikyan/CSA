@@ -86,6 +86,12 @@ public class AnagramMaker {
 		}
 	}
 
+	/**
+	 * 	Recursive method that builds an anagram - one word per instance
+	 * 	The base case is when the phrase runs out of letters
+	 *	@param anagram	the list of used words in the anagram
+	 *	@param phrase	(originally the input of the user) the unused letter
+	 */
 	public void assembleAnagram(List<String> anagram, String phrase) {
 		int anagramLength = 0;
 		for (int i = 0; i < anagram.size(); i++)
@@ -136,10 +142,17 @@ public class AnagramMaker {
 	}
 
 	/**
+<<<<<<< Updated upstream
 	 *	Returns word with the the letters removed
 	 *	@param	word	the word/phrase to be changed
 	 * 	@param	letters	the letters to remove from word
 	 *	@return 		word without the letters from the String letters
+=======
+	 *	Returns word with the letters of the variable letters removed
+	 *	@param	word	the original word
+	 *	@param	letters	the letters to be removed
+	 *	@return 		word with the letters in the String called letters removed
+>>>>>>> Stashed changes
 	 */
 	public String removeLetters(String word, String letters) {
 		String out = "";
