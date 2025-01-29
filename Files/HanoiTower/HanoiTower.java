@@ -67,7 +67,7 @@ public class HanoiTower {
 		/*
 		 *	User plays game
 		 */
-		playGame(args);
+		//playGame(args);
 		
 		/*
 		 *	Step-by-step algorithm solves the game using 4 levels
@@ -77,7 +77,7 @@ public class HanoiTower {
 		/*
 		 *	Automated solver method
 		 */
-		//solvePuzzle(args);
+		solvePuzzle(args);
 		
 		// Print out number of moves
 		System.out.println("\nIt took you " + numMoves + " moves with " + levels + " levels.\n");
@@ -200,6 +200,7 @@ public class HanoiTower {
 		 *
 		 *	to be completed by student ...
 		 */
+		 solvePuzzleRecursive(levels, 0, 1, 2);
 	}
 	
 	/*
@@ -207,6 +208,19 @@ public class HanoiTower {
 	 *
 	 *	to be completed by student ...
 	 */
+	 
+	 /**
+	  * 
+	  */
+	 public void solvePuzzleRecursive(int discsToMove, int from, int to, int other) {
+		if (discsToMove > 0) {
+			solvePuzzleRecursive(discsToMove - 1, from, other, to);
+			moveDisk(from, to);
+			printTowers();
+			solvePuzzleRecursive(discsToMove - 1, other, to, from);
+		}
+		
+	 }
 
 	
 	/**
