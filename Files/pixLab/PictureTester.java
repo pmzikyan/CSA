@@ -8,6 +8,33 @@
  */
 public class PictureTester
 {
+  /** Method to test pixelate */
+  public static void testBlur(int size)
+  {
+    Picture butterfly = new Picture("images/butterfly1.jpg");
+    butterfly.explore();
+    Picture blurredButterfly = butterfly.blur(size);
+    blurredButterfly.explore();
+  }
+  
+  /** Method to test pixelate */
+  public static void testPixelate(int size)
+  {
+    Picture beach = new Picture("images/beach.jpg");
+    beach.explore();
+    beach.pixelate(size);
+    beach.explore();
+  }
+  
+  /** Method to test grayscale */
+  public static void testGrayscale()
+  {
+    Picture arch = new Picture("images/arch.jpg");
+    arch.explore();
+    arch.grayscale();
+    arch.explore();
+  }
+  
   /** Method to test zeroBlue */
   public static void testZeroBlue()
   {
@@ -17,7 +44,7 @@ public class PictureTester
     beach.explore();
   }
   
-  /** Method to test zeroBlue */
+  /** Method to test keepOnlyBlue */
   public static void testKeepOnlyBlue()
   {
     Picture beach = new Picture("images/beach.jpg");
@@ -89,5 +116,8 @@ public class PictureTester
     //testSetRedToHalfValueInTopHalf();
     //testClearBlueOverValue(200);
     //testGetAverageForColumn(0);
+    
+    //testPixelate(57); testPixelate(75); testPixelate(99);  
+    testBlur(3); testBlur(5); testBlur(11); 
   }
 }

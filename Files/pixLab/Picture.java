@@ -85,6 +85,106 @@ public class Picture extends SimplePicture
     
   }
   
+  
+	/** Method that blurs the picture
+	 * Precondition: size has to be an odd int that is bigger than 0
+	 * 
+	 * @param size Blur size, greater is more blur
+     * @return Blurred picture
+	 */
+	public Picture blur(int size) {
+		Pixel[][] pixels = this.getPixels2D();
+		Picture result = new Picture(pixels.length, pixels[0].length);
+		Pixel[][] resultPixels = result.getPixels2D();
+		
+		
+		for (int i = 0; i < pixels.length; i++)
+		{
+			for (int j = 0; j < pixels[0].length; j++)
+			{
+				int pixelCount, redTotal, greenTotal, blueTotal;
+				pixelCount = redTotal = greenTotal = blueTotal = 0;
+				
+				for (int a = i - size/2; a < i + size/2 && a < 
+												pixels.length; a++)
+				{
+					if (a < 0)
+						a = 0;
+					for (int b = j - size/2; b < b + size/2 && b < 
+												pixels[0].length; b++)
+					{
+						if (b < 0)
+							b = 0;
+						//System.out.println(a + ", " + b + " centered at " + i + ", " + j);
+											
+						
+						redTotal += pixels[a][b].getRed();
+						greenTotal += pixels[a][b].getGreen();
+						blueTotal += pixels[a][b].getBlue();
+						pixelCount++;
+					}
+				}
+				System.out.println(redTotal/pixelCount + ", " + greenTotal/pixelCount + ", " + blueTotal/pixelCount);
+				resultPixels[i][j].setColor(new Color(redTotal/pixelCount, 
+							greenTotal/pixelCount, blueTotal/pixelCount));
+			}
+		}
+		
+		return result;
+	}
+  
+	/** To pixelate by dividing area into size x size.
+	 * Precondition: size has to be an odd int that is bigger than 0
+	 * @param size Side length of square area to pixelate.
+	 */
+	public void pixelate(int size) {
+		Pixel[][] pixels = this.getPixels2D();
+		
+		for (int i = size/2; i < pixels.length + size/2; i += size - 1)
+		{
+			for (int j = size/2; j < pixels[0].length + size/2; j += size - 1)
+			{
+				int pixelCount, redTotal, greenTotal, blueTotal;
+				pixelCount = redTotal = greenTotal = blueTotal = 0;
+				
+				for (int a = i - size/2; a < i + size/2 && a < 
+												pixels.length; a++)
+				{
+					for (int b = j - size/2; b < b + size/2 && b < 
+												pixels[0].length; b++)
+					{
+						
+						//System.out.println(a + ", " + b + " centered at " + i + ", " + j);
+											
+						
+						redTotal += pixels[a][b].getRed();
+						greenTotal += pixels[a][b].getGreen();
+						blueTotal += pixels[a][b].getBlue();
+						pixelCount++;
+					}
+				}
+				
+				Color averageColor = new Color(redTotal/pixelCount, 
+							greenTotal/pixelCount, blueTotal/pixelCount);
+				
+				for (int a = i - size/2; a < i + size/2 && a < 
+												pixels.length; a++)
+				{
+					if (a < 0)
+						a = 0;
+					for (int b = j - size/2; b < j + size/2 && b < 
+												pixels[0].length; b++)
+					{
+						if (b < 0)
+							b = 0;
+						
+						pixels[a][b].setColor(averageColor);
+					}
+				}
+			}
+		}
+	}
+  
   /** Method to set the blue to 0 */
   public void zeroBlue()
   {
@@ -123,6 +223,22 @@ public class Picture extends SimplePicture
         pixelObj.setRed(255 - pixelObj.getRed());
         pixelObj.setGreen(255 - pixelObj.getGreen());
         pixelObj.setBlue(255 - pixelObj.getBlue());
+      }
+    }
+  }
+  
+  /** Method to set make an image grayscale by averaging the red, green, and blue */
+  public void grayscale()
+  {
+    Pixel[][] pixels = this.getPixels2D();
+    for (Pixel[] rowArray : pixels)
+    {
+      for (Pixel pixelObj : rowArray)
+      {
+        int value = (pixelObj.getRed() + pixelObj.getGreen() + pixelObj.getBlue())/3;
+        pixelObj.setRed(value);
+        pixelObj.setGreen(value);
+        pixelObj.setBlue(value);
       }
     }
   }
