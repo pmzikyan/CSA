@@ -143,15 +143,21 @@ public class AnagramMaker {
 
 	/**
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	 *	Returns word with the the letters removed
 	 *	@param	word	the word/phrase to be changed
 	 * 	@param	letters	the letters to remove from word
 	 *	@return 		word without the letters from the String letters
 =======
+=======
+>>>>>>> Stashed changes
 	 *	Returns word with the letters of the variable letters removed
 	 *	@param	word	the original word
 	 *	@param	letters	the letters to be removed
 	 *	@return 		word with the letters in the String called letters removed
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 	 */
 	public String removeLetters(String word, String letters) {

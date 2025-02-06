@@ -42,7 +42,8 @@
  *	Requires Prompt class
  *
  *	@author	Mr Greenstein
- *	@since	
+ *	@author Petros Mzikyan (of the method to solve the tower)
+ *	@since	1/22/2025
  */
 public class HanoiTower {
 	
@@ -210,7 +211,12 @@ public class HanoiTower {
 	 */
 	 
 	 /**
-	  * 
+	  * Recursively solves the Tower of Hanoi using the most effective algorithm
+	  *
+	  * @param	discsToMove		the number of discs left to move
+	  * @param	from			from where to move the disc to
+	  * @param 	to				where to move the disc to
+	  * @param	other			the unused disc (is a param to make the code simpler)
 	  */
 	 public void solvePuzzleRecursive(int discsToMove, int from, int to, int other) {
 		if (discsToMove > 0) {
