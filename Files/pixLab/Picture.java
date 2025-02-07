@@ -85,7 +85,99 @@ public class Picture extends SimplePicture
     
   }
   
-  
+	/** Method that swaps the left and right side of a picture
+	* 
+	* @return left-right swapped picture
+	*/
+	public Picture swapLeftRight()
+	{
+		Pixel[][] pixels = this.getPixels2D();
+		Picture result = new Picture(pixels.length, pixels[0].length);
+		Pixel[][] resultPixels = result.getPixels2D();
+		
+		for (int i = 0; i < pixels.length; i++)
+		{
+			for (int j = 0; j < pixels[0].length; j++)
+			{
+				resultPixels[i][(j + pixels[0].length/2) % pixels[0].length]
+					= pixels[i][j];
+			}
+		}
+		return result;
+	}
+	
+	/** Method that enhances a picture by getting average Color around
+	* a pixel then applies the following formula:
+	*
+	* pixelColor <- 2 * currentValue - averageValue
+	*
+	* size is the area to sample for blur.
+	*
+	* @param size Larger means more area to average around pixel
+	* and longer compute time.
+	* @return enhanced picture
+	*/
+	public Picture enhance(int size)
+	{
+		Pixel[][] pixels = this.getPixels2D();
+		Picture result = new Picture(pixels.length, pixels[0].length);
+		Pixel[][] resultPixels = result.getPixels2D();
+		
+		
+		for (int i = 0; i < pixels.length; i++)
+		{
+			for (int j = 0; j < pixels[0].length; j++)
+			{
+				int pixelCount, redTotal, greenTotal, blueTotal;
+				pixelCount = redTotal = greenTotal = blueTotal = 0;
+				
+				for (int a = i - size/2; a < i + size/2 && a < 
+												pixels.length; a++)
+				{
+					if (a < 0)
+						a = 0;
+					for (int b = j - size/2; b < j + size/2 && b < 
+												pixels[0].length; b++)
+					{
+						if (b < 0)
+							b = 0;
+						//System.out.println(a + ", " + b + " centered at " + i + ", " + j);
+											
+						
+						redTotal += pixels[a][b].getRed();
+						greenTotal += pixels[a][b].getGreen();
+						blueTotal += pixels[a][b].getBlue();
+						pixelCount++;
+					}
+				}
+				//System.out.println(redTotal/pixelCount + ", " + greenTotal/pixelCount + ", " + blueTotal/pixelCount);
+				int red = 2 * pixels[i][j].getRed() - redTotal/pixelCount;
+				int green = 2 * pixels[i][j].getGreen() - greenTotal/pixelCount;
+				int blue = 2 * pixels[i][j].getBlue() - blueTotal/pixelCount;
+				
+				if (red < 0)
+					red = 0;
+				else if (red > 255)
+					red = 255;
+				
+				if (green < 0)
+					green = 0;
+				else if (green > 255)
+					green = 255;
+				
+				if (blue < 0)
+					blue = 0;
+				else if (blue > 255)
+					blue = 255;
+				
+				resultPixels[i][j].setColor(new Color(red, green, blue));
+			}
+		}
+		
+		return result;
+	}
+	
+	
 	/** Method that blurs the picture
 	 * Precondition: size has to be an odd int that is bigger than 0
 	 * 
@@ -110,7 +202,7 @@ public class Picture extends SimplePicture
 				{
 					if (a < 0)
 						a = 0;
-					for (int b = j - size/2; b < b + size/2 && b < 
+					for (int b = j - size/2; b < j + size/2 && b < 
 												pixels[0].length; b++)
 					{
 						if (b < 0)
@@ -124,7 +216,7 @@ public class Picture extends SimplePicture
 						pixelCount++;
 					}
 				}
-				System.out.println(redTotal/pixelCount + ", " + greenTotal/pixelCount + ", " + blueTotal/pixelCount);
+				//System.out.println(redTotal/pixelCount + ", " + greenTotal/pixelCount + ", " + blueTotal/pixelCount);
 				resultPixels[i][j].setColor(new Color(redTotal/pixelCount, 
 							greenTotal/pixelCount, blueTotal/pixelCount));
 			}
