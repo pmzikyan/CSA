@@ -84,8 +84,57 @@ public class Picture extends SimplePicture
     return output;
     
   }
-  
-	/** Method that swaps the left and right side of a picture
+
+    /** Method that shifts the pixels of an image shiftCount amount og pixels
+     *  for steps amount of times (each step is around the same height)
+     *
+     * @param shiftCount The number of pixels to shift to the right
+     * @param steps The number of steps
+     * @return The picture with pixels shifted in stair steps
+     */
+    public Picture stairStep(int shiftCount, int steps)
+    {
+        Pixel[][] pixels = this.getPixels2D();
+        Picture result = new Picture(pixels.length, pixels[0].length);
+        Pixel[][] resultPixels = result.getPixels2D();
+
+        int shift = 0;
+        int stepSize = pixels.length/steps;
+        int nextStep = stepSize;
+
+//        int numRemainders = pixels.length%steps;
+        int addRemainderInterval = pixels.length/pixels.length%steps;
+        int remainderIndex = addRemainderInterval;
+        int extra = 0;
+
+        if (nextStep - stepSize <= remainderIndex && remainderIndex < nextStep) {
+            extra = 1;
+            remainderIndex += addRemainderInterval;
+        }
+
+        for (int i = 0; i < pixels.length; i++)
+        {
+            if (i == nextStep + extra) {
+                shift += shiftCount;
+                nextStep += stepSize;
+                if (nextStep - stepSize <= remainderIndex && remainderIndex < nextStep) {
+                    extra = 1;
+                    remainderIndex += addRemainderInterval;
+                }
+                else
+                    extra = 0;
+            }
+            //System.out.println(i + ", " + (shift + extra));
+            for (int j = 0; j < pixels[0].length; j++)
+                System.out.println("[" + i + "] [" + j + "] ---> [" + i + "] [" +
+                        (j + shift) % pixels[0].length + "]\twith a shift of " + shift);
+                //resultPixels[i][(j + shift) % pixels[0].length] = pixels[i][j];
+        }
+
+        return result;
+    }
+
+    /** Method that swaps the left and right side of a picture
 	* 
 	* @return left-right swapped picture
 	*/

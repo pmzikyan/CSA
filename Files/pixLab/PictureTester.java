@@ -14,7 +14,16 @@ public class PictureTester
 		  "images/seagull.jpg", "images/swan.jpg", "images/temple.jpg", "images/water.jpg"};
 	  return images[(int)(Math.random() * images.length)];
   }
-  
+
+  /** Method to test swapLeftRight */
+  public static void testStairStep(int shiftCount, int steps)
+  {
+    Picture image = new Picture(getRandomImage());
+    image.explore();
+    Picture newImage = image.stairStep(shiftCount, steps);
+    newImage.explore();
+  }
+
   /** Method to test swapLeftRight */
   public static void testSwapLeftRight()
   {
@@ -145,6 +154,7 @@ public class PictureTester
     //testPixelate(57); testPixelate(75); testPixelate(99);  
     //testBlur(7); testBlur(21); testBlur(45);
     //testEnhance(21);
-    testSwapLeftRight();
+    //testSwapLeftRight();
+    testStairStep(30, 3);
   }
 }
