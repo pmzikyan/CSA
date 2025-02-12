@@ -11,7 +11,10 @@ import java.util.List; // resolves problem with java.awt.List and java.util.List
  * SimplePicture and allows the student to add functionality to
  * the Picture class.  
  * 
- * @author Barbara Ericson ericson@cc.gatech.edu
+ * @author	Barbara Ericson ericson@cc.gatech.edu
+ * 			and Petros Mzikyan (with some methods)
+ * 
+ * @since	2/3/2025
  */
 public class Picture extends SimplePicture 
 {
@@ -85,6 +88,59 @@ public class Picture extends SimplePicture
     
   }
 
+		
+	/**	
+	 *	@param maxFactor Max height (shift) of curve in pixels
+	 *	@return Liquified picture
+	 */	
+	public Picture liquify(int maxHeight) {
+		Pixel[][] pixels = this.getPixels2D();
+        Picture result = new Picture(pixels.length, pixels[0].length);
+        Pixel[][] resultPixels = result.getPixels2D();
+        
+        int height = pixels.length/2;
+        int bellWidth = pixels.length/5;
+
+        /*int shift = 0;
+        int stepSize = pixels.length/steps;
+        int nextStep = stepSize;
+        
+        int addRemainderInterval = pixels.length/pixels.length%steps;
+        int remainderIndex = addRemainderInterval;
+        int extra = 0;
+		
+        if (nextStep - stepSize <= remainderIndex && remainderIndex < nextStep) {
+            extra = 1;
+            remainderIndex += addRemainderInterval;
+        }*/
+
+        for (int i = 0; i < pixels.length; i++)
+        {
+            /*if (i == nextStep + extra) {
+                shift += shiftCount;
+                nextStep += stepSize;
+                if (nextStep - stepSize <= remainderIndex && remainderIndex < nextStep) {
+                    extra = 1;
+                    remainderIndex += addRemainderInterval;
+                }
+                else
+                    extra = 0;
+            }*/
+            for (int j = 0; j < pixels[0].length; j++) 
+            {
+				double exponent = Math.pow(i - height / 2.0, 2) / (2.0 * Math.pow(bellWidth, 2));
+				int rightShift = (int)(maxHeight * Math.exp(- exponent)); 
+				System.out.println(rightShift);
+                resultPixels[i][(j + rightShift) % pixels[0].length].setColor
+												(pixels[i][j].getColor());
+			}
+        }
+
+        return result;
+    }
+    
+    
+    
     /** Method that shifts the pixels of an image shiftCount amount og pixels
      *  for steps amount of times (each step is around the same height)
      *
@@ -125,10 +181,15 @@ public class Picture extends SimplePicture
                     extra = 0;
             }
             //System.out.println(i + ", " + (shift + extra));
-            for (int j = 0; j < pixels[0].length; j++)
-                System.out.println("[" + i + "] [" + j + "] ---> [" + i + "] [" +
-                        (j + shift) % pixels[0].length + "]\twith a shift of " + shift);
-                //resultPixels[i][(j + shift) % pixels[0].length] = pixels[i][j];
+            //System.out.println(pixels[0].length);
+            for (int j = 0; j < pixels[0].length; j++) {
+                //System.out.println("[" + i + "] [" + j + "] ---> [" + i + "] [" +
+                        //((j + shift) % pixels[0].length) + "]\twith a shift of " + shift);
+                resultPixels[i][(j + shift) % pixels[0].length].setColor
+												(pixels[i][j].getColor());
+                //System.out.println("" + resultPixels[i][(j + shift) % pixels[0].length].getColor());
+                //resultPixels[i][j].setColor(new Color(255, 0, 0));
+			}
         }
 
         return result;

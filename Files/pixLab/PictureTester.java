@@ -15,7 +15,16 @@ public class PictureTester
 	  return images[(int)(Math.random() * images.length)];
   }
 
-  /** Method to test swapLeftRight */
+  /** Method to test liquify */
+  public static void testLiquify(int maxHeight)
+  {
+    Picture image = new Picture(getRandomImage());
+    image.explore();
+    Picture newImage = image.liquify(maxHeight);
+    newImage.explore();
+  }
+
+  /** Method to test stairStep */
   public static void testStairStep(int shiftCount, int steps)
   {
     Picture image = new Picture(getRandomImage());
@@ -155,6 +164,13 @@ public class PictureTester
     //testBlur(7); testBlur(21); testBlur(45);
     //testEnhance(21);
     //testSwapLeftRight();
-    testStairStep(30, 3);
+    //testStairStep(30, 3); testStairStep(60, 10);
+    
+    /*Picture image = new Picture("images/beach.jpg");
+    image.explore();
+    Picture newImage = image.stairStep(1, 480);
+    newImage.explore();*/
+    
+    testLiquify(100);
   }
 }
