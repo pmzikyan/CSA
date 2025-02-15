@@ -74,6 +74,102 @@ public class Picture extends SimplePicture
   
   ////////////////////// methods ///////////////////////////////////////
   
+	/**
+	 * Rotate image in radians, clean up "d rop-out" pixels
+	 * @param angle angle of rotation in radians
+	 * @return Picture that is rotated
+	 */
+	public Picture rotate(double angle) { 
+		Pixel[][] pixels = this.getPixels2D();
+		int resultSize = (int)Math.sqrt(pixels.length * pixels.length + 
+					pixels[0].length * pixels[0].length) + 10;
+		Picture result = new Picture(resultSize, resultSize);
+		Pixel[][] resultPixels = result.getPixels2D(); 
+		
+		for (int i = 0; i < pixels.length; i++)
+		{
+			for (int j = 0; j < pixels[0].length; j++)
+			{
+				int y = (int)(j*Math.cos(angle) - i*Math.sin(angle)) + pixels.length/2;
+				int x = (int)(j*Math.sin(angle) + i*Math.cos(angle));
+				if (y >= 0 && y < resultSize && x >= 0 && x < resultSize)
+					resultPixels[y][x].setColor(pixels[i][j].getColor());
+			}
+		}
+		
+		return result;
+	}
+	
+  
+	/** Method that creates a green screen picture
+	 * @return green screen picture
+	 */
+	public Picture greenScreen()
+	{
+		// Get background picture
+		Picture bg = new Picture("greenScreenImages/IndoorJapaneseRoomBackground.jpg");
+		Pixel[][] bgPixels = bg.getPixels2D();
+		// Get cat picture
+		Picture kitty = new Picture("greenScreenImages/kitten2GreenScreen.jpg");
+		Pixel[][] kittyPixels = kitty.getPixels2D();
+		// Get mouse picture
+		Picture minion = new Picture("greenScreenImages/minion2GreenScreen.jpg");
+		Pixel[][] minionPixels = minion.getPixels2D();
+		
+		greenScreenOnPicture(bgPixels, kittyPixels, 2, 20, 260);
+		greenScreenOnPicture(bgPixels, minionPixels, 2, 510, 220);
+		
+		return bg;
+	}
+	
+	/**	Uses for loops to green screen an image and place it on a background
+	 *	@param	bg		The pixels of the background
+	 *	@param	image	The pixels of the image to be added onto the bg
+	 *	@param	scale	How much the image is scaled down to fit on the bg
+	 *	@param	x		The x coord of the image on the bg
+	 *	@param	y		The y coord of the image on the bg
+	 *	@return			The scene of the bg with the green screened image on it
+	 */
+	public void greenScreenOnPicture(Pixel[][] bg, Pixel[][] image, int scale, int x, int y)
+	{
+		for (int i = 0; i < image.length/scale && i < bg.length - y; i++)
+		{
+			for (int j = 0; j < image[0].length/scale && j < bg[0].length + x; j++)
+			{
+				Pixel pix = image[i*scale][j*scale];
+				if (pix.colorDistance(Color.GREEN) > 190)
+					bg[i + y][j + x].setColor(pix.getColor());
+			}
+		}
+	}
+   
+   /**	Method that creates an edge detected black/white picture
+	 *	@param	threshold	threshold as determined by Pixel’s colorDistance method
+	 *	@return				edge detected picture
+	 */
+	public Picture edgeDetectionBelow(int threshold)
+	{
+		Pixel[][] pixels = this.getPixels2D();
+		Picture result = new Picture(pixels.length, pixels[0].length);
+		Pixel[][] resultPixels = result.getPixels2D(); 
+		
+		for (int i = 0; i < pixels.length - 1; i++)
+		{
+			for (int j = 0; j < pixels[0].length; j++)
+			{
+				double distance = pixels[i][j].colorDistance(pixels[i + 1][j].getColor());
+				if (distance >= threshold)
+					resultPixels[i][j].setColor(Color.BLACK);
+			}
+		}
+		
+		return result;
+	}
+  
+  
+  
+  
+  
   /**
    * Method to return a string with information about this picture.
    * @return a string with information about the picture such as fileName,
