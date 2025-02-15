@@ -88,8 +88,32 @@ public class Picture extends SimplePicture
     
   }
 
-		
-	/**	
+
+    /** Uses a sinusodial function to shift an image to the left and right
+     * @param amplitude The maximum shift of pixels
+     * @return Wavy picture
+     */
+    public Picture wavy(int amplitude) {
+        Pixel[][] pixels = this.getPixels2D();
+        Picture result = new Picture(pixels.length, pixels[0].length);
+        Pixel[][] resultPixels = result.getPixels2D();
+
+        int height = pixels.length;
+        int bellWidth = pixels.length / 6;
+
+        for (int i = 0; i < pixels.length; i++) {
+            double angle = 2 * Math.PI * 4.5 * i / height;
+            int shift = (int) (25 * Math.sin(angle));
+            for (int j = 0; j < pixels[0].length; j++) {
+                resultPixels[i][(j + shift + pixels[0].length) % pixels[0].length].setColor
+                        (pixels[i][j].getColor());
+            }
+        }
+
+        return result;
+    }
+
+    /**	Uses a horizontal Gaussian curve to shift an image to the right
 	 *	@param maxFactor Max height (shift) of curve in pixels
 	 *	@return Liquified picture
 	 */	
@@ -98,39 +122,15 @@ public class Picture extends SimplePicture
         Picture result = new Picture(pixels.length, pixels[0].length);
         Pixel[][] resultPixels = result.getPixels2D();
         
-        int height = pixels.length/2;
-        int bellWidth = pixels.length/5;
-
-        /*int shift = 0;
-        int stepSize = pixels.length/steps;
-        int nextStep = stepSize;
-        
-        int addRemainderInterval = pixels.length/pixels.length%steps;
-        int remainderIndex = addRemainderInterval;
-        int extra = 0;
-		
-        if (nextStep - stepSize <= remainderIndex && remainderIndex < nextStep) {
-            extra = 1;
-            remainderIndex += addRemainderInterval;
-        }*/
+        int height = pixels.length;
+        int bellWidth = pixels.length/6;
 
         for (int i = 0; i < pixels.length; i++)
         {
-            /*if (i == nextStep + extra) {
-                shift += shiftCount;
-                nextStep += stepSize;
-                if (nextStep - stepSize <= remainderIndex && remainderIndex < nextStep) {
-                    extra = 1;
-                    remainderIndex += addRemainderInterval;
-                }
-                else
-                    extra = 0;
-            }*/
-            for (int j = 0; j < pixels[0].length; j++) 
+            double exponent = Math.pow(i - height / 2.0, 2) / (2.0 * Math.pow(bellWidth, 2));
+            int rightShift = (int)(maxHeight * Math.exp(- exponent));
+            for (int j = 0; j < pixels[0].length; j++)
             {
-				double exponent = Math.pow(i - height / 2.0, 2) / (2.0 * Math.pow(bellWidth, 2));
-				int rightShift = (int)(maxHeight * Math.exp(- exponent)); 
-				System.out.println(rightShift);
                 resultPixels[i][(j + rightShift) % pixels[0].length].setColor
 												(pixels[i][j].getColor());
 			}
@@ -180,15 +180,9 @@ public class Picture extends SimplePicture
                 else
                     extra = 0;
             }
-            //System.out.println(i + ", " + (shift + extra));
-            //System.out.println(pixels[0].length);
             for (int j = 0; j < pixels[0].length; j++) {
-                //System.out.println("[" + i + "] [" + j + "] ---> [" + i + "] [" +
-                        //((j + shift) % pixels[0].length) + "]\twith a shift of " + shift);
                 resultPixels[i][(j + shift) % pixels[0].length].setColor
 												(pixels[i][j].getColor());
-                //System.out.println("" + resultPixels[i][(j + shift) % pixels[0].length].getColor());
-                //resultPixels[i][j].setColor(new Color(255, 0, 0));
 			}
         }
 
@@ -251,16 +245,13 @@ public class Picture extends SimplePicture
 					{
 						if (b < 0)
 							b = 0;
-						//System.out.println(a + ", " + b + " centered at " + i + ", " + j);
-											
-						
+
 						redTotal += pixels[a][b].getRed();
 						greenTotal += pixels[a][b].getGreen();
 						blueTotal += pixels[a][b].getBlue();
 						pixelCount++;
 					}
 				}
-				//System.out.println(redTotal/pixelCount + ", " + greenTotal/pixelCount + ", " + blueTotal/pixelCount);
 				int red = 2 * pixels[i][j].getRed() - redTotal/pixelCount;
 				int green = 2 * pixels[i][j].getGreen() - greenTotal/pixelCount;
 				int blue = 2 * pixels[i][j].getBlue() - blueTotal/pixelCount;
@@ -317,17 +308,14 @@ public class Picture extends SimplePicture
 					{
 						if (b < 0)
 							b = 0;
-						//System.out.println(a + ", " + b + " centered at " + i + ", " + j);
-											
-						
+
 						redTotal += pixels[a][b].getRed();
 						greenTotal += pixels[a][b].getGreen();
 						blueTotal += pixels[a][b].getBlue();
 						pixelCount++;
 					}
 				}
-				//System.out.println(redTotal/pixelCount + ", " + greenTotal/pixelCount + ", " + blueTotal/pixelCount);
-				resultPixels[i][j].setColor(new Color(redTotal/pixelCount, 
+				resultPixels[i][j].setColor(new Color(redTotal/pixelCount,
 							greenTotal/pixelCount, blueTotal/pixelCount));
 			}
 		}
@@ -356,9 +344,7 @@ public class Picture extends SimplePicture
 												pixels[0].length; b++)
 					{
 						
-						//System.out.println(a + ", " + b + " centered at " + i + ", " + j);
-											
-						
+
 						redTotal += pixels[a][b].getRed();
 						greenTotal += pixels[a][b].getGreen();
 						blueTotal += pixels[a][b].getBlue();
@@ -414,7 +400,7 @@ public class Picture extends SimplePicture
     }
   }
   
-  /** Method to set everything besides blue to 0 */
+  /** Method to invert the colors */
   public void negate()
   {
     Pixel[][] pixels = this.getPixels2D();

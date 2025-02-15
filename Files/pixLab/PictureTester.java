@@ -15,6 +15,15 @@ public class PictureTester
 	  return images[(int)(Math.random() * images.length)];
   }
 
+  /** Method to test wavt */
+  public static void testWavy(int amplitude)
+  {
+    Picture image = new Picture(getRandomImage());
+    image.explore();
+    Picture newImage = image.wavy(amplitude);
+    newImage.explore();
+  }
+
   /** Method to test liquify */
   public static void testLiquify(int maxHeight)
   {
@@ -171,6 +180,7 @@ public class PictureTester
     Picture newImage = image.stairStep(1, 480);
     newImage.explore();*/
     
-    testLiquify(100);
+    //testLiquify(100);
+    //testWavy(20);
   }
 }
