@@ -12,10 +12,15 @@ public class SimpleCalc {
 	
 	private ArrayStack<Double> valueStack;		// value stack
 	private ArrayStack<String> operatorStack;	// operator stack
+	
+	private Prompt ask;
 
 	// constructor	
 	public SimpleCalc() {
-		
+		valueStack = new ArrayStack<Double>();
+		operatorStack = new ArrayStack<String>();
+		utils = new ExprUtils();
+		ask = new Prompt();
 	}
 	
 	public static void main(String[] args) {
@@ -34,7 +39,24 @@ public class SimpleCalc {
 	 *	and display the answer.
 	 */
 	public void runCalc() {
-		
+		boolean run = true;
+		while (run)
+		{
+			System.out.println();
+			String expression = ask.getString("").toLowerCase();
+			switch (expression)
+			{
+				case "h":
+					printHelp();
+					break;
+				case "q":
+					run = false;
+					break;
+				default:
+					System.out.println(evaluateExpression(
+								utils.tokenizeExpression(expression)));
+			}
+		}
 	}
 	
 	/**	Print help */
@@ -53,9 +75,68 @@ public class SimpleCalc {
 	 *	@return			a double value of the evaluated expression
 	 */
 	public double evaluateExpression(List<String> tokens) {
-		double value = 0;
+		double value = 0.0;
+		boolean noValue = true;
+		
+		for (String token : tokens) {
+			System.out.println(token);
+			if (Character.isDigit(token.charAt(0)))
+				valueStack.push(Double.parseDouble(token));
+			else {
+				
+				while (!(operatorStack.isEmpty() || 
+					hasPrecedence(operatorStack.peek(), token)))
+				{
+					if (noValue)
+					{
+						value = evaluateSmallExpression(
+							valueStack.pop(), valueStack.pop(),
+							operatorStack.pop());
+						noValue = false;
+					}
+					else
+						value = evaluateSmallExpression(
+							value, valueStack.pop(), operatorStack.pop());
+				}
+				
+				operatorStack.push(token);
+			}
+		}
+		
+		while (!valueStack.isEmpty() || !operatorStack.isEmpty())
+		{
+			if (noValue)
+			{
+				value = evaluateSmallExpression(
+					valueStack.pop(), valueStack.pop(),
+					operatorStack.pop());
+				noValue = false;
+			}
+			else
+				value = evaluateSmallExpression(
+					value, valueStack.pop(), operatorStack.pop());
+		}
 		
 		return value;
+	}
+	
+	private
+	
+	public double evaluateSmallExpression(double num1, double num2, 
+														String operator)
+	{
+		System.out.println(num1 + " " + operator + " " + num2);
+		switch (operator) {
+			case "+":
+				return num1 + num2;
+			case "-":
+				return num1 - num2;
+			case "*":
+				return num1 * num2;
+			case "/":
+				return num1 / num2;
+		}
+		return 0.0;
 	}
 	
 	/**
