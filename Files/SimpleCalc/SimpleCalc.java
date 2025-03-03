@@ -77,6 +77,7 @@ public class SimpleCalc {
 	public double evaluateExpression(List<String> tokens) {
 		double value = 0.0;
 		boolean noValue = true;
+		//boolean noOperator = true;
 		
 		for (String token : tokens) {
 			System.out.println(token);
@@ -85,9 +86,12 @@ public class SimpleCalc {
 			else {
 				
 				while (!(operatorStack.isEmpty() || 
-					hasPrecedence(operatorStack.peek(), token)))
+					!hasPrecedence(token, operatorStack.peek())))
 				{
-					if (noValue)
+					System.out.println("top is " + operatorStack.peek());
+					/*if (operatorStack.peek().equals("(") ||
+						operatorStack.peek().equals(")"));
+					else */if (noValue)
 					{
 						value = evaluateSmallExpression(
 							valueStack.pop(), valueStack.pop(),
@@ -105,7 +109,10 @@ public class SimpleCalc {
 		
 		while (!valueStack.isEmpty() || !operatorStack.isEmpty())
 		{
-			if (noValue)
+			if (operatorStack.peek().equals("(") ||
+						operatorStack.peek().equals(")"))
+						operatorStack.pop();
+			else if (noValue)
 			{
 				value = evaluateSmallExpression(
 					valueStack.pop(), valueStack.pop(),
@@ -119,9 +126,7 @@ public class SimpleCalc {
 		
 		return value;
 	}
-	
-	private
-	
+		
 	public double evaluateSmallExpression(double num1, double num2, 
 														String operator)
 	{
@@ -152,6 +157,8 @@ public class SimpleCalc {
 	 *		otherwise true
 	 */
 	private boolean hasPrecedence(String op1, String op2) {
+		System.out.println(op1 + " compared to " + op2);
+		
 		if (op1.equals("^")) return false;
 		if (op2.equals("(") || op2.equals(")")) return false;
 		if ((op1.equals("*") || op1.equals("/") || op1.equals("%")) 
