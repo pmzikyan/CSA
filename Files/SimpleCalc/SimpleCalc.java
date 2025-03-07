@@ -75,8 +75,8 @@ public class SimpleCalc {
 	 *	@return			a double value of the evaluated expression
 	 */
 	public double evaluateExpression(List<String> tokens) {
-		double value = 0.0;
-		boolean noValue = true;
+		/*double value = 0.0;
+		boolean noValue = true;*/
 		//boolean noOperator = true;
 		
 		for (String token : tokens) {
@@ -85,63 +85,84 @@ public class SimpleCalc {
 				valueStack.push(Double.parseDouble(token));
 			else {
 				
-				while (!(operatorStack.isEmpty() || 
-					!hasPrecedence(token, operatorStack.peek())))
+				while (!operatorStack.isEmpty() && 
+					hasPrecedence(token, operatorStack.peek()) && !token.equals("("))
 				{
-					System.out.println("top is " + operatorStack.peek());
-					/*if (operatorStack.peek().equals("(") ||
-						operatorStack.peek().equals(")"));
-					else */if (noValue)
+					if (operatorStack.peek().equals("(") ||
+						operatorStack.peek().equals(")"))
+						operatorStack.pop();
+					/*else if (noValue)
 					{
+						System.out.println(valueStack.peek());
 						value = evaluateSmallExpression(
 							valueStack.pop(), valueStack.pop(),
 							operatorStack.pop());
 						noValue = false;
-					}
+					}*/
 					else
-						value = evaluateSmallExpression(
-							value, valueStack.pop(), operatorStack.pop());
+						evaluateSmallExpression();
 				}
 				
 				operatorStack.push(token);
 			}
 		}
 		
-		while (!valueStack.isEmpty() || !operatorStack.isEmpty())
+		while (haveMultipleNumbers())
 		{
 			if (operatorStack.peek().equals("(") ||
 						operatorStack.peek().equals(")"))
 						operatorStack.pop();
-			else if (noValue)
+			/*else if (noValue)
 			{
 				value = evaluateSmallExpression(
 					valueStack.pop(), valueStack.pop(),
 					operatorStack.pop());
 				noValue = false;
-			}
+			}*/
 			else
-				value = evaluateSmallExpression(
-					value, valueStack.pop(), operatorStack.pop());
+				evaluateSmallExpression();
 		}
 		
-		return value;
+		System.out.print("The answer is: ");
+		return valueStack.pop();
+	}
+	
+	private boolean haveMultipleNumbers()
+	{
+		if (valueStack.isEmpty())
+			return false;
+		double num = valueStack.pop();
+		boolean oneValue = valueStack.isEmpty();
+		valueStack.push(num);
+		if (oneValue)
+			return true;
+		return false;
 	}
 		
-	public double evaluateSmallExpression(double num1, double num2, 
-														String operator)
+	private void /*double*/ evaluateSmallExpression(/*double num1, double num2, 
+														String operator*/)
 	{
-		System.out.println(num1 + " " + operator + " " + num2);
-		switch (operator) {
+		double num1 = valueStack.pop(), num2 = valueStack.pop();
+		double answer = 0;
+		System.out.println(num1 + " " + num2);
+		switch (operatorStack.pop()) {
 			case "+":
-				return num1 + num2;
+				answer = num2 + num1;
+				break;
 			case "-":
-				return num1 - num2;
+				answer = num2 - num1;
+				break;
 			case "*":
-				return num1 * num2;
+				answer = num2 * num1;
+				break;
 			case "/":
-				return num1 / num2;
+				answer = num2 / num1;
+				break;
+			case "^":
+				answer = Math.pow(num2, num1);
+				break;
 		}
-		return 0.0;
+		valueStack.push(answer);
 	}
 	
 	/**
