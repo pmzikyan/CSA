@@ -85,14 +85,14 @@ public class SimpleCalc {
 				valueStack.push(Double.parseDouble(token));
 			else {
 				
-				while (!(operatorStack.isEmpty() || 
-					!hasPrecedence(token, operatorStack.peek())))
+				while (!operatorStack.isEmpty() && 
+					hasPrecedence(token, operatorStack.peek()) && !token.equals("("))
 				{
-					System.out.println("top is " + operatorStack.peek());
-					/*if (operatorStack.peek().equals("(") ||
+					if (operatorStack.peek().equals("(") ||
 						operatorStack.peek().equals(")"));
-					else */if (noValue)
+					else if (noValue)
 					{
+						System.out.println(valueStack.peek());
 						value = evaluateSmallExpression(
 							valueStack.pop(), valueStack.pop(),
 							operatorStack.pop());
@@ -124,6 +124,7 @@ public class SimpleCalc {
 					value, valueStack.pop(), operatorStack.pop());
 		}
 		
+		System.out.print("The answer is: ");
 		return value;
 	}
 		
@@ -133,13 +134,17 @@ public class SimpleCalc {
 		System.out.println(num1 + " " + operator + " " + num2);
 		switch (operator) {
 			case "+":
-				return num1 + num2;
+				return num2 + num1;
 			case "-":
-				return num1 - num2;
+				return num2 - num1;
 			case "*":
-				return num1 * num2;
+				return num2 * num1;
 			case "/":
-				return num1 / num2;
+				return num2 / num1;
+			case "%":
+				return num2 % num1;
+			case "^":
+				return Math.pow(num2, num1);
 		}
 		return 0.0;
 	}

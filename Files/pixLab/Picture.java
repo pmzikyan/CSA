@@ -79,26 +79,47 @@ public class Picture extends SimplePicture
 	 * @param angle angle of rotation in radians
 	 * @return Picture that is rotated
 	 */
-	public Picture rotate(double angle) { 
+	public Picture rotate(double angle) {
+		double complementaryAngle = angle;
+		angle = Math.PI/2 - angle;
+
 		Pixel[][] pixels = this.getPixels2D();
-		int resultSize = (int)Math.sqrt(pixels.length * pixels.length + 
-					pixels[0].length * pixels[0].length) + 10;
-		Picture result = new Picture(resultSize, resultSize);
-		Pixel[][] resultPixels = result.getPixels2D(); 
-		
+
+		int shiftDown = (int)(pixels[0].length * Math.sin(complementaryAngle));
+		int height = (int)(pixels[0].length * Math.sin(complementaryAngle)
+									+ pixels.length * Math.sin(angle));
+		int width = (int)(pixels.length * Math.sin(complementaryAngle)
+				+ pixels[0].length * Math.sin(angle));
+		Picture result = new Picture(height, width);
+		Pixel[][] resultPixels = result.getPixels2D();
+
+
 		for (int i = 0; i < pixels.length; i++)
 		{
 			for (int j = 0; j < pixels[0].length; j++)
 			{
-				int y = (int)(j*Math.cos(angle) - i*Math.sin(angle)) + pixels.length/2;
+				int y = shiftDown - (int)(j*Math.cos(angle) - i*Math.sin(angle));
 				int x = (int)(j*Math.sin(angle) + i*Math.cos(angle));
-				if (y >= 0 && y < resultSize && x >= 0 && x < resultSize)
+				if (y >= 0 && y < height && x >= 0 && x < width)
 					resultPixels[y][x].setColor(pixels[i][j].getColor());
+			}
+		}
+
+		for (int i = 1; i < height - 1; i++)
+		{
+			for (int j = 1; j < width - 1; j++)
+			{
+				if (resultPixels[i][j].colorDistance(Color.WHITE) == 0.0
+						&& resultPixels[i][j-1].colorDistance(Color.WHITE) != 0.0
+						&& resultPixels[i][j+1].colorDistance(Color.WHITE) != 0.0)
+					resultPixels[i][j].setColor(resultPixels[i - 1][j].getColor());
 			}
 		}
 		
 		return result;
 	}
+
+
 	
   
 	/** Method that creates a green screen picture

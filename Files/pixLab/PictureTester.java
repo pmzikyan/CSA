@@ -15,7 +15,24 @@ public class PictureTester
 	  return images[(int)(Math.random() * images.length)];
   }
 
-  /** Method to test wavt */
+  /** Method to test rotate */
+  public static void testRotate(double angle)
+  {
+    Picture image = new Picture(getRandomImage());
+    image.explore();
+    Picture newImage = image.rotate(angle);
+    newImage.explore();
+  }
+
+  /** Method to test greenScreen */
+  public static void testGreenScreen()
+  {
+    Picture image = new Picture(getRandomImage());
+    Picture newImage = image.greenScreen();
+    newImage.explore();
+  }
+
+  /** Method to test wavy */
   public static void testWavy(int amplitude)
   {
     Picture image = new Picture(getRandomImage());
@@ -54,7 +71,8 @@ public class PictureTester
   /** Method to test enhance */
   public static void testEnhance(int size)
   {
-    Picture image = new Picture(getRandomImage());
+    //Picture image = new Picture(getRandomImage());
+    Picture image = new Picture("rajiv.jpg");
     image.explore();
     Picture newImage = image.enhance(size);
     newImage.explore();
@@ -171,7 +189,7 @@ public class PictureTester
     
     //testPixelate(57); testPixelate(75); testPixelate(99);  
     //testBlur(7); testBlur(21); testBlur(45);
-    //testEnhance(21);
+    //testEnhance(25);
     //testSwapLeftRight();
     //testStairStep(30, 3); testStairStep(60, 10);
     
@@ -182,5 +200,9 @@ public class PictureTester
     
     //testLiquify(100);
     //testWavy(20);
+
+    //testGreenScreen();
+
+    testRotate(Math.PI / 4); testRotate(Math.PI / 6);
   }
 }
