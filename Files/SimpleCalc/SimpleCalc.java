@@ -1,7 +1,7 @@
 import java.util.List;		// used by expression evaluator
 
 /**
- *	<Description goes here>
+ *	Calculates expressions that use doubles, operators, and variables using Stacks
  *
  *	@author	Petros Mzikyan
  *	@since	2/26/2025
@@ -15,6 +15,7 @@ public class SimpleCalc {
 	
 	private Prompt ask;
 
+
 	// constructor	
 	public SimpleCalc() {
 		valueStack = new ArrayStack<Double>();
@@ -22,12 +23,13 @@ public class SimpleCalc {
 		utils = new ExprUtils();
 		ask = new Prompt();
 	}
-	
+
 	public static void main(String[] args) {
 		SimpleCalc sc = new SimpleCalc();
 		sc.run();
 	}
-	
+
+	// runs the calc program
 	public void run() {
 		System.out.println("\nWelcome to SimpleCalc!!!");
 		runCalc();
@@ -80,7 +82,7 @@ public class SimpleCalc {
 		//boolean noOperator = true;
 		
 		for (String token : tokens) {
-			System.out.println(token);
+			//System.out.println(token);
 			if (Character.isDigit(token.charAt(0)))
 				valueStack.push(Double.parseDouble(token));
 			else {
@@ -124,14 +126,21 @@ public class SimpleCalc {
 					value, valueStack.pop(), operatorStack.pop());
 		}
 		
-		System.out.print("The answer is: ");
+		//System.out.print("The answer is: ");
 		return value;
 	}
-		
+
+	/**
+	 * Method that calculates an expression of two numbers and an operator
+	 * @param num1		first number
+	 * @param num2		second number
+	 * @param operator	the operator used for the expression
+	 * @return			the result of the expression
+	 */
 	public double evaluateSmallExpression(double num1, double num2, 
 														String operator)
 	{
-		System.out.println(num1 + " " + operator + " " + num2);
+		//System.out.println(num1 + " " + operator + " " + num2);
 		switch (operator) {
 			case "+":
 				return num2 + num1;
@@ -163,13 +172,12 @@ public class SimpleCalc {
 	 */
 	private boolean hasPrecedence(String op1, String op2) {
 		System.out.println(op1 + " compared to " + op2);
-		
+
 		if (op1.equals("^")) return false;
 		if (op2.equals("(") || op2.equals(")")) return false;
-		if ((op1.equals("*") || op1.equals("/") || op1.equals("%")) 
+		if ((op1.equals("*") || op1.equals("/") || op1.equals("%"))
 				&& (op2.equals("+") || op2.equals("-")))
 			return false;
 		return true;
 	}
-	 
 }
