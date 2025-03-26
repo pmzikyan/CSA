@@ -1,0 +1,5 @@
+java -cp “.;../../gridworld.jar” ChameleonRunner; java -cp “.;../../gridworld.jar” ChameleonKidRunner; java -cp “.;../../gridworld.jar” RockHoundRunner; java -cp “.;../../gridworld.jar” BlusterCritterRunner; java -cp “.;../../gridworld.jar” QuickCrabRunner; java -cp “.;../../gridworld.jar” KingCrabRunner
+ONE													TWO													THREE											FOUR													FIVE												SIX
+
+
+cd "C:\Users\pmzikyan217\Desktop\Files\GridWorldCode\projects\critters"; clear
