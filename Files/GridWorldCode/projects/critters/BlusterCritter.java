@@ -2,106 +2,104 @@ import info.gridworld.actor.Actor;
 import info.gridworld.actor.Rock;
 import info.gridworld.actor.Critter;
 import info.gridworld.grid.Location;
+
 import java.util.ArrayList;
 import java.awt.Color;
+
+/**
+ *	Critter that changes color lightness/darkness depending on how many
+ * 	critters there are near it and how "couragous" it is (threshold for changing color)
+ *
+ *	@author	Petros Mzikyan
+ *	@since	3/19/2025
+ */
 public class BlusterCritter extends Critter
 {
-    private int courageFactor;
+    private int courage;
 
-    public BlusterCritter(int c)
+    public BlusterCritter(int num)
     {
         super();
-        courageFactor = c;
+        courage = num;
     }
 
     /**
-     * Gets the actors for processing. The actors must be contained in the
-     * same grid as this critter. Implemented to return the actors that
-     * occupy neighboring grid locations within two steps of this critter
-     * @return a list of actors that are neighbors of this critter
+     * Gets the actors that are 2 or less steps away and returns them in
+     * an ArrayList
+     * @return	ArrayList of the actors in a 2 step radius
      */
     public ArrayList<Actor> getActors()
     {
-        ArrayList<Actor> actors = new ArrayList<Actor>();
-
-        Location loc = getLocation();
-        for(int r = loc.getRow() - 2; r <= loc.getRow() + 2; r++ )
-            for(int c = loc.getCol() - 2; c <= loc.getCol() + 2; c++)
-            {
-                Location tempLoc = new Location(r,c);
-                if(getGrid().isValid(tempLoc))
+        ArrayList<Actor> out = new ArrayList<Actor>();
+        Location location = getLocation();
+        
+        for(int row = location.getRow() - 2; row <= location.getRow() + 2; row++ ) {
+            for(int col = location.getCol() - 2; col <= location.getCol() + 2; col++) {
+                Location newLoc = new Location(row,col);
+                
+                if(getGrid().isValid(newLoc))
                 {
-                    Actor a = getGrid().get(tempLoc);
-                    if(a != null && a != this)
-                        actors.add(a);
+                    Actor actor = getGrid().get(newLoc);
+                    if(actor != null && actor != this)
+                        out.add(actor);
                 }
             }
-        return actors;
+		}
+		
+        return out;
     }
     /**
-     * Processes the actors. Implemented to count all the actors within
-     * 2 locations of this critter. If there are fewer than courageFactor
-     * critters in these locations, this BlusterCritter lightens, otherwise
-     * it darkens.
-     * Precondition: All objects in <code>actors</code> are contained in the
-     * same grid as this critter.
-     * @param actors the actors to be processed
+     * Gets the number of critters near itself and decides to either darken or lighten
+     * @param	actors	the list of actors to look from for critters
      */
     public void processActors(ArrayList<Actor> actors)
     {
-        int count = 0;
-        for(Actor a: actors)
-            if(a instanceof Critter)
-                count++;
-        if(count < courageFactor)
+        int numCritters = 0;
+        for(Actor actor: actors)
+            if(actor instanceof Critter)
+                numCritters++;
+        
+        if(numCritters < courage)
             lighten();
         else
             darken();
     }
 
     /**
-     * Darkens this critter's color by subtracting 1 from red, green, and
-     * blue components if they are greater than 0. To darken the color
-     * faster, subtract a slightly larger value.
+     * Darkens the color by subracting 1 from the red, green, and blue values
+     * of the color of the BlusterCritter
      */
     private void darken()
     {
         Color c = getColor();
-        int red = c.getRed();
-        int green = c.getGreen();
-        int blue = c.getBlue();
-        if(red > 0) red--;
-        if(green > 0) green--;
-        if(blue > 0) blue--;
-        setColor(new Color(red, green, blue));
-
-        // this segment of code uses same logic as the flower class to darken
-        // an object's color
-        // to use this technique add DARKENING_FACTOR as a class instance
-        // variable; then replace the active code for darken with the
-        // following five lines of code
-        // private static final double DARKENING_FACTOR = 0.05;
-        // Color c = getColor();
-        // int red = (int) (c.getRed() * (1 - DARKENING_FACTOR));
-        // int green = (int) (c.getGreen() * (1 - DARKENING_FACTOR));
-        // int blue = (int) (c.getBlue() * (1 - DARKENING_FACTOR));
-        // setColor(new Color(red, green, blue));
+        
+        int r = c.getRed();
+        int g = c.getGreen();
+        int b = c.getBlue();
+        
+        if(r > 0) r--;
+        if(g > 0) g--;
+        if(b > 0) b--;
+        
+        setColor(new Color(r, g, b));
     }
 
     /**
-     * Lightens this critter's color by adding 1 to the red, green, and blue
-     * components if they are less than 255. To lighten the color faster,
-     * add a slightly larger value.
+     * Lightens the color by adding 1 to the red, green, and blue values
+     * of the color of the BlusterCritter
      */
     private void lighten()
     {
         Color c = getColor();
-        int red = c.getRed();
-        int green = c.getGreen();
-        int blue = c.getBlue();
-        if(red < 255) red++;
-        if(green < 255) green++;
-        if(blue < 255) blue++;
-        setColor(new Color(red, green, blue));
+        
+        int r = c.getRed();
+        int g = c.getGreen();
+        int b = c.getBlue();
+        
+        if(r < 255) r++;
+        if(g < 255) g++;
+        if(b < 255) b++;
+        
+        setColor(new Color(r, g, b));
     }
 }

@@ -2,18 +2,19 @@ import info.gridworld.actor.Actor;
 import info.gridworld.actor.Critter;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
+
 import java.awt.Color;
 import java.util.ArrayList;
+
 /**
- * A <code>KingCrab</code> looks at a limited set of neighbors when it
- * eats and moves.<br />
+ *	Extends ChameleonCrittor and acts like it, except instead of reacting
+ * 	to actors in any direction it reacts to actors behind and in front of it
+ *
+ *	@author	Petros Mzikyan
+ *	@since	3/19/2025
  */
 public class KingCrab extends CrabCritter
 {
-    public KingCrab()
-    {
-        setColor(Color.PINK);
-    }
 
     /**
      * Computes the rounded integer distance between two given locations.
