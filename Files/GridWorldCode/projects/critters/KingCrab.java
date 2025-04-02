@@ -7,63 +7,52 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 /**
- *	Extends ChameleonCrittor and acts like it, except instead of reacting
- * 	to actors in any direction it reacts to actors behind and in front of it
+ *  A type of CrabCritter that "scares off" neighboring actors. If the actor
+ *  is able to move away from the KingCrab, it does. If it can't, it gets
+ *  removed from the grid.
  *
  *	@author	Petros Mzikyan
  *	@since	3/19/2025
  */
 public class KingCrab extends CrabCritter
 {
-
     /**
-     * Computes the rounded integer distance between two given locations.
+     * Calculates the hypotnuse of a right triangle with points A and B
+     * (AKA it just finds the distance between two points)
+     * @param loc1  point A
+     * @param loc2  point B
+     * @return      hypotnuse (rounded to the nearest integer)
      */
     public int distanceFrom(Location loc1, Location loc2)
     {
-        int x1 = loc1.getRow();
-        int y1 = loc1.getCol();
-        int x2 = loc2.getRow();
-        int y2 = loc2.getCol();
-        double dist = Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2)) + .5;
-        return (int)Math.floor(dist);
+        int row1 = loc1.getRow(), col1 = loc1.getCol();
+        int row2 = loc2.getRow(), col2 = loc2.getCol();
+
+        double hypotenuse = Math.sqrt((row1 - row2) * (row1 - row2) +
+                                        (col1 - col2) * (col1 - col2)) + 0.5;
+        return (int) Math.floor(hypotenuse);
     }
 
-    /*
-     * This method moves the Actor to a location that is one location
-     * further away from this KingCrab and returns true. If there is no
-     * location that is one location further away, the method returns false.
-     */
-    private boolean moveOneMoreAway(Actor a)
-    {
-        ArrayList<Location> locs =
-                getGrid().getEmptyAdjacentLocations(a.getLocation());
-
-        for(Location loc:locs)
-        {
-            if(distanceFrom(getLocation(), loc) > 1)
-            {
-                a.moveTo(loc);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /*
-     * Each actor in the list actors is told to move one location further
-     * away from this KingCrab. If that is not possible, the actor is
-     * removed from the grid.
+    /**
+     * Checks every actor near the KingCrab to see if they can move away.
+     * If they can move away, they move away, else they get removed from the grid.
      */
     public void processActors(ArrayList<Actor> actors)
     {
-        for (Actor a : actors)
+        for (Actor actor : actors)
         {
-            if (!moveOneMoreAway(a))
-            {
-                a.removeSelfFromGrid();
+            ArrayList<Location> locs =
+                    getGrid().getEmptyAdjacentLocations(actor.getLocation());
+
+            boolean moved = false;
+            for(Location loc : locs) {
+                if (distanceFrom(getLocation(), loc) > 1) {
+                    actor.moveTo(loc);
+                    moved = true;
+                }
             }
+            if (!moved)
+                actor.removeSelfFromGrid();
         }
     }
 }
