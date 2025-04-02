@@ -41,12 +41,16 @@ public class Coyote extends Critter
 		ArrayList<Location> out = new ArrayList<Location>();
 		Location loc = getLocation().getAdjacentLocation(getDirection());
 		
-		if (!getGrid().isValid(loc));
-		else if (getGrid().get(loc) == null) out.add(loc);
+		if ((getGrid().isValid(loc)) && (getGrid().get(loc) == null || 
+			getGrid().get(loc) instanceof Boulder)) 
+			out.add(loc);
 		else
 		{
 			sleeping = !sleeping;
 			steps = 0;
+			do {
+				setDirection((int)(Math.random()*8)*45);
+			} while (!getGrid().isValid(getLocation().getAdjacentLocation(getDirection())));
 		}
 		
 		return out;
@@ -58,6 +62,16 @@ public class Coyote extends Critter
             removeSelfFromGrid();
         else if (!sleeping)
         {
+            if (getGrid().get(loc) instanceof Boulder)
+            {
+				Actor boulder = getGrid().get(loc);
+				boulder.removeSelfFromGrid();
+				Kaboom kaboom = new Kaboom();
+				kaboom.putSelfInGrid(getGrid(), loc);
+				removeSelfFromGrid();
+				return;
+			}
+            
             Location oldLoc = getLocation();
             moveTo(loc);
             if (placeStone)
@@ -73,8 +87,12 @@ public class Coyote extends Critter
         {
 			sleeping = !sleeping;
 			steps = 0;
-			if (!sleeping) placeStone = true;
-			else setDirection((int)(Math.random()*8)*45);
+			if (sleeping) placeStone = true;
+			else {
+				do {
+				setDirection((int)(Math.random()*8)*45);
+				} while (!getGrid().isValid(getLocation().getAdjacentLocation(getDirection())));
+			}
 		}
     }
 }
