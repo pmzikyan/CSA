@@ -1,8 +1,12 @@
 /**
- * 
- * 
- * test
- */ 
+ *  A Critter of the Roadrunner. RR goes up to 3 steps in any compass direction
+ *  per turn (higher distance is prioritized). If the RR bumps into a Coyote,
+ *  the RR goes into the space of the Coyote and a SickCoyote gets placed
+ *  on an adjecent space. A Boulder explodes the RR like it does for Coyote.
+ *
+ *	@author	Petros Mzikyan
+ *	@since	3/28/2025
+ */
 
 import info.gridworld.grid.Location;
 import info.gridworld.grid.Grid;
@@ -13,16 +17,29 @@ import java.util.ArrayList;
 
 public class RR extends Critter
 {
+	/* Sets up the direction of NORTH and the color of null for the RR */
 	public RR() 
 	{ 
 		setDirection(Location.NORTH);
 		setColor(null); 
 	}
-	
+
+	/**
+	 * This method doesn't get used, so it's empty
+	 * @return	Empty ArrayList
+	 */
 	public ArrayList<Actor> getActors() { return new ArrayList(); }
-	
+
+	/* This method doesn't get used, so it's empty */
 	public void processActors(ArrayList<Actor> actors) { }
-	
+
+	/**
+	 * Gets the ArrayList of the available locations.
+	 * It prioritizes moving longer distances, so if it can move 3 steps, it
+	 * doesn't check for 2 steps, and if it can move 2, it doesn't check for 1.
+	 * The RR can move into empty spaces, Coyotes, and Boulders.
+	 * @return	ArrayList of the available locations to move to.
+	 */
 	public ArrayList<Location> getMoveLocations()
 	{
 		ArrayList<Location> locs = new ArrayList<Location>();
@@ -48,7 +65,15 @@ public class RR extends Critter
 		
 		return locs;
 	}
-	
+
+	/**
+	 * Moves to the location loc
+	 * If the location has a Boulder, the RR and Boulder explode (Boulder -> Kaboom)
+	 * If the location has a Coyote, the Coyote gets knocked out
+	 * (The RR goes on the space where the Coyote was, and a SickCoyote gets placed
+	 * on an adjacent space)
+	 * @param loc
+	 */
 	public void makeMove(Location loc)
     {
         Grid grid = getGrid();
@@ -77,12 +102,15 @@ public class RR extends Critter
 		}
         
     }
-    
-    
-    
-    
-    
-     private Location getAdjacentLocation(int direction, int num)
+
+
+	/**
+	 * Returns the location in a num amount of spaces in the direction of direction
+	 * @param direction		The direction to return the location of
+	 * @param num			Number of spaces away to check
+	 * @return				The location num number of spaces away in a direction
+	 */
+	private Location getAdjacentLocation(int direction, int num)
     {
         // reduce mod 360 and round to closest multiple of 45
         int adjustedDirection = (direction + Location.HALF_RIGHT / 2) % 
