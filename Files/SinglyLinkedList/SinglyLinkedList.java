@@ -17,7 +17,7 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	/** Copy constructor */
 	public SinglyLinkedList(SinglyLinkedList<E> oldList) 
 	{
-		if (oldList.isEmpty) 
+		if (oldList.isEmpty()) 
 			head = tail = null;
 		else
 		{
@@ -36,8 +36,9 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@return			true if successful; false otherwise
 	 */
 	public boolean add(E obj) {
-		tail.setNext(obj);
-		tail = obj;
+		ListNode<E> newNode = new ListNode<E>(obj);
+		tail.setNext(newNode);
+		tail = newNode;
 		return true;
 	}
 	
@@ -48,12 +49,23 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public boolean add(int index, E obj) {
-		return false;
+		
+		throw new NoSuchElementException();
 	}
 	
 	/**	@return the number of elements in this list */
 	public int size() {
-		return 0;
+		if (isEmpty())
+			return 0;
+		int count = 1;
+		ListNode<E> curNode = head;
+		while (curNode != tail) 
+		{
+			count++;
+			curNode = curNode.getNext();
+		}
+		
+		return count;
 	}
 	
 	/**	Return the ListNode at the specified index
@@ -62,7 +74,16 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public ListNode<E> get(int index) {
-		return null;
+		
+		int size = size();
+		ListNode<E> curNode = head;
+		for (int i = 0; i < index; i++)
+		{
+			if (i >= size)
+				throw new NoSuchElementException();
+			curNode = curNode.getNext();
+		}
+		return curNode;
 	}
 	
 	/**	Replace the object at the specified index
@@ -81,12 +102,13 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public E remove(int index) {
-		return null;
+		
+		throw new NoSuchElementException();
 	}
 	
 	/**	@return	true if list is empty; false otherwise */
 	public boolean isEmpty() {
-		return false;
+		return head == null;
 	}
 	
 	/**	Tests whether the list contains the given object
@@ -94,6 +116,10 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@return				true if the object is in the list; false otherwise
 	 */
 	public boolean contains(E object) {
+		if (isEmpty)
+			return false;
+		ListNode<E> curNode = head;
+		while (curNode 
 		return false;
 	}
 	
