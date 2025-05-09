@@ -23,7 +23,7 @@ public class SinglyLinkedList<E extends Comparable<E>>
 		{
 			head = oldList.get(0);
 			tail = head;
-			while (tail.getNext() != null);
+			while (tail.getNext() != null)
 				tail = tail.getNext();
 		}
 	}
@@ -36,6 +36,11 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@return			true if successful; false otherwise
 	 */
 	public boolean add(E obj) {
+		if (isEmpty()) {
+			head = tail = new ListNode<E>(obj);
+			return true;
+		}
+		
 		ListNode<E> newNode = new ListNode<E>(obj);
 		tail.setNext(newNode);
 		tail = newNode;
@@ -49,8 +54,32 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public boolean add(int index, E obj) {
+		int size = size();
+			
+		ListNode<E> newObj = new ListNode(obj);
+		if (index == 0) {
+			newObj.setNext(head);
+			if (isEmpty())
+				tail = newObj;
+			head = newObj;
+			return true;
+		}
+		if (index == size) {
+			add(obj);
+		}
 		
-		throw new NoSuchElementException();
+		ListNode<E> curNode = head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			if (i >= size - 1)
+				throw new NoSuchElementException();
+			curNode = curNode.getNext();
+		}
+		ListNode<E> nextObj = curNode.getNext();
+		curNode.setNext(newObj);
+		newObj.setNext(nextObj);
+				
+		return true;
 	}
 	
 	/**	@return the number of elements in this list */
@@ -59,6 +88,8 @@ public class SinglyLinkedList<E extends Comparable<E>>
 			return 0;
 		int count = 1;
 		ListNode<E> curNode = head;
+		
+		System.out.println(head.getValue() +""+ tail.getValue());
 		while (curNode != tail) 
 		{
 			count++;
@@ -93,7 +124,17 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public E set(int index, E obj) {
-		return null;
+		int size = size();
+		ListNode<E> curNode = head;
+		for (int i = 0; i < index; i++)
+		{
+			if (i >= size)
+				throw new NoSuchElementException();
+			curNode = curNode.getNext();
+		}
+		E oldObj = curNode.getValue();
+		curNode.setValue(obj);
+		return oldObj;
 	}
 	
 	/**	Remove the element at the specified index
@@ -102,24 +143,58 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public E remove(int index) {
+		if (isEmpty())
+			throw new NoSuchElementException();
+			
+		E oldObj;
+		if (index == 0) {
+			oldObj = head.getValue();
+			if (size() > 1)
+				head = head.getNext();
+			else
+				clear();
+			return oldObj;
+		}
 		
-		throw new NoSuchElementException();
+		int size = size();
+		ListNode<E> curNode = head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			if (i >= size)
+				throw new NoSuchElementException();
+			curNode = curNode.getNext();
+		}
+		oldObj = curNode.getNext().getValue();
+		curNode.setNext(curNode.getNext().getNext());
+		
+		if (index == size - 1)
+		{
+			tail = head;
+			while (tail.getNext() != null)
+				tail = tail.getNext();
+		}
+		
+		return oldObj;
 	}
 	
 	/**	@return	true if list is empty; false otherwise */
-	public boolean isEmpty() {
-		return head == null;
-	}
+	public boolean isEmpty() { return head == null; }
 	
 	/**	Tests whether the list contains the given object
 	 *	@param object		the object to test
 	 *	@return				true if the object is in the list; false otherwise
 	 */
 	public boolean contains(E object) {
-		if (isEmpty)
+		if (isEmpty())
 			return false;
 		ListNode<E> curNode = head;
-		while (curNode 
+		do {
+			curNode = curNode.getNext();
+			if (curNode.getValue().equals(object))
+				return true;	
+		}
+		while (!curNode.equals(tail));
+		
 		return false;
 	}
 	
@@ -128,6 +203,17 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@return				if found, the index of the element; otherwise returns -1
 	 */
 	public int indexOf(E element) {
+		if (isEmpty())
+			return -1;
+		ListNode<E> curNode = head;
+		int index = 0;
+		do {
+			if (curNode.equals(element))
+				return index;
+			curNode = curNode.getNext();
+			index++;
+		}
+		while (!curNode.equals(tail));
 		return -1;
 	}
 	
