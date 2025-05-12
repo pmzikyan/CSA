@@ -12,7 +12,11 @@ public class Snake extends SinglyLinkedList<Coordinate> {
 	 *	Precondition: To place the Snake, the board must have at
 	 *				least location.getRow() + 4 more rows.
 	 */
-	public Snake(Coordinate location) { }
+	public Snake(Coordinate location) 
+	{
+		for (int i = 0; i < 5; i++)
+			add(new Coordinate(location.getRow() + i, location.getCol()));
+	}
 	
 	
 }

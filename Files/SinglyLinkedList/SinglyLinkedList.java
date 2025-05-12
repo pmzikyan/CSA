@@ -1,7 +1,16 @@
 import java.util.NoSuchElementException;
 
 /**
- *	SinglyLinkedList - (description)
+ *	A Singly Linked List with helper methods.
+ * 	clear 	clears the list
+ * 	add 	adds an object to an index (or at the end if there's no index parameter)
+ * 	size	returns the size of the list
+ * 	get		gets the ListNode of a specific index
+ * 	set		sets the ListNode of a specific index to an object
+ * 	remove	removes a ListNode of a specific index
+ * 	isEmpty		returns true if the list is empty and false if it's not
+ * 	contains	returns true if the list contains an object; false otherwise
+ * 	indexOf		returns the index of the first instance of an object from the list
  *
  *	@author	Petros Mzikyan
  *	@since	4/28/2025
@@ -208,7 +217,7 @@ public class SinglyLinkedList<E extends Comparable<E>>
 		ListNode<E> curNode = head;
 		int index = 0;
 		do {
-			if (curNode.equals(element))
+			if (curNode.getValue().equals(element))
 				return index;
 			curNode = curNode.getNext();
 			index++;
