@@ -97,8 +97,7 @@ public class SinglyLinkedList<E extends Comparable<E>>
 			return 0;
 		int count = 1;
 		ListNode<E> curNode = head;
-		
-		System.out.println(head.getValue() +""+ tail.getValue());
+
 		while (curNode != tail) 
 		{
 			count++;
@@ -194,16 +193,8 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@return				true if the object is in the list; false otherwise
 	 */
 	public boolean contains(E object) {
-		if (isEmpty())
-			return false;
-		ListNode<E> curNode = head;
-		do {
-			curNode = curNode.getNext();
-			if (curNode.getValue().equals(object))
-				return true;	
-		}
-		while (!curNode.equals(tail));
-		
+		if (indexOf(object) >= 0)
+			return true;
 		return false;
 	}
 	
@@ -223,6 +214,8 @@ public class SinglyLinkedList<E extends Comparable<E>>
 			index++;
 		}
 		while (!curNode.equals(tail));
+		if (curNode.getValue().equals(element))
+			return index;
 		return -1;
 	}
 	
