@@ -2,8 +2,8 @@
  *	Binary Tree of Comparable values.
  *	The tree only has unique values. It does not add duplicate values.
  *	
- *	@author	
- *	@since	
+ *	@author	Petros Mzikyan
+ *	@since	5/19/2025
  */
 public class BinaryTree<E extends Comparable<E>> {
 
@@ -20,22 +20,60 @@ public class BinaryTree<E extends Comparable<E>> {
 	/**	Add a node to the tree
 	 *	@param value		the value to put into the tree
 	 */
-	public void add(E value) { }
+	public void add(E value) 
+	{
+		TreeNode<E> curNode = root;
+		while (curNode != null)
+		{
+			if (value.comapareTo(curNode.getValue()) < 0)
+				curNode = curNode.getLeft();
+			else
+				curNode = curNode.getRight();
+		}
+		curNode = new TreeNode<E>(value);
+	}
 	
 	/**
 	 *	Print Binary Tree Inorder
 	 */
-	public void printInorder() { }
+	public void printInorder() { printInorder(root); }
+	
+	private void printInorder(TreeNode<E> node)
+	{
+		if (node == null)
+			return;
+		printInorder(node.getLeft());
+		System.out.print(node.getValue() + " ");
+		printInorder(node.getRight());
+	}
 	
 	/**
 	 *	Print Binary Tree Preorder
 	 */
-	public void printPreorder() { }
+	public void printPreorder() { printPreorder(root); }
+	
+	private void printPreorder(TreeNode<E> node)
+	{
+		if (node == null)
+			return;
+		System.out.print(node.getValue() + " ");
+		printInorder(node.getLeft());
+		printInorder(node.getRight());
+	}
 	
 	/**
 	 *	Print Binary Tree Postorder
 	 */
-	public void printPostorder() { }
+	public void printPostorder() { printPostorder(root); }
+	
+	private void printPostorder(TreeNode<E> node)
+	{
+		if (node == null)
+			return;
+		printInorder(node.getLeft());
+		printInorder(node.getRight());
+		System.out.print(node.getValue() + " ");
+	}
 		
 	/**	Return a balanced version of this binary tree
 	 *	@return		the balanced tree
