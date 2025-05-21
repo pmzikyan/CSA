@@ -13,7 +13,7 @@ public class BinaryTree<E extends Comparable<E>> {
 										// used by printTree()
 	
 	/**	constructor for BinaryTree */
-	public BinaryTree() { }
+	public BinaryTree() { root = null; }
 	
 	/**	Field accessors and modifiers */
 	
@@ -23,14 +23,26 @@ public class BinaryTree<E extends Comparable<E>> {
 	public void add(E value) 
 	{
 		TreeNode<E> curNode = root;
-		while (curNode != null)
+		TreeNode<E> nextNode = null;
+		
+		if (curNode == null)
 		{
-			if (value.comapareTo(curNode.getValue()) < 0)
-				curNode = curNode.getLeft();
+			root = new TreeNode<E>(value);
+			return;
+		}
+		
+		do {
+			if (value.compareTo(curNode.getValue()) < 0)
+				nextNode = curNode.getLeft();
 			else
 				curNode = curNode.getRight();
 		}
-		curNode = new TreeNode<E>(value);
+		while (nextNode != null);
+		
+		if (value.compareTo(curNode.getValue()) < 0)
+			curNode.setLeft(new TreeNode<E>(value));
+		else
+			curNode.setRight(new TreeNode<E>(value));
 	}
 	
 	/**
